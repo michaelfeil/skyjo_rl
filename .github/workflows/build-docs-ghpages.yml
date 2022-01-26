@@ -1,0 +1,65 @@
+name: build-docs
+
+on:
+  release:
+    types: [created, edited]
+
+jobs:
+  deploy_docs:
+    runs-on: ubuntu-latest
+    # only run if pytest successfull
+    # if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+    - name: Checkout current branch
+      uses: actions/checkout@v2
+      with:
+        path: 'branch-dir'
+    - name: Checkout gh-pages branch
+      uses: actions/checkout@v2
+      with:
+        ref: 'refs/heads/gh-pages'
+        path: 'gh-pages-dir'
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+        cache: 'pip'
+        cache-dependency-path: '**/requirements*.txt'
+    - name: Install dependencies from current branch
+      run: |
+        cd branch-dir
+        pip install -r requirements.txt
+        pip install -e .
+    - name: create shinx docs from current branch
+      # create shpinx api autodocs of opensentiment and move them to docs
+      # makefile: make html build the the docs/_build/html/
+      run: |
+        cd branch-dir
+        sphinx-apidoc -o ./docs ./opensentiment 
+        cd docs
+        make html
+    
+    - name: merge /docs/_build/ files into gh-pages branch
+      run: |
+        # move all files to gh-pages branch
+        cp -r branch-dir/docs/_build/html/* gh-pages-dir/
+        cp -r branch-dir/.gitignore gh-pages-dir/
+        # configure gh-pages-dir / gh-pages branch
+        ls -a
+        cd gh-pages-dir
+        ls -a
+        # create nojekyll file
+        touch .nojekyll
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        # add local files and untrack
+        git add .
+        git commit -m "Update documentation" -a || true
+        # The above command will fail if no changes were present, so we ignore
+        # that.
+
+    - name: Push changes to github repo/gh-pages
+      uses: ad-m/github-push-action@master
+      with:
+         branch: refs/heads/gh-pages
+         directory: gh-pages-dir/
