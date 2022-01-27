@@ -5,6 +5,7 @@ import itertools
 from typing import Tuple
 import numba
 # from numpyprint import np_format
+import warnings
 
 class SkyjoGame(object):
     def __init__(self, num_players: int = 2) -> None:
@@ -169,22 +170,35 @@ class SkyjoGame(object):
         )
     
     def draw_card(self, player_id: int, from_drawpile: bool):
-        """draw one card from the"""
+        """perform drawing action"""
         # assert len(self.discard_pile) + len(self.drawpile) == 150 - 12*self.num_players
         assert self.expected_action[0] == player_id and self.expected_action[1] == self._name_draw, \
             f"expected action is {self.expected_action}, but requested was [{player_id}, draw]"
         self.next_action()
+        
+        # perform goal check, games end if any player has a open 12-card deck before picking up card.
+        if self.game_terminated:
+            warnings.warn(
+                "Attemp playing terminated game. game has been already terminated by pervios player."
+            )
+            return True, self.game_terminated
+        game_done = self._player_goal_check(self.players_masked, player_id)
+        if game_done:
+            self.game_terminated = self._evaluate_game(self.players_cards, player_id)
+            return True, self.game_terminated      
+        
+        # perform drawing action
         if from_drawpile:
             if not self.drawpile:
-                self.reshuffle_discard_pile()
-            self.holding_card= self.drawpile.pop()
-            return self.holding_card
+                # cardpile is empty, reshuffle.
+                self._reshuffle_discard_pile()
+            self.holding_card = self.drawpile.pop()
         else:
             # discard pile cannot go empty by definition
             self.holding_card = self.discard_pile.pop()
-            return self.holding_card
+        return False, []
         
-    def reshuffle_discard_pile(self):
+    def _reshuffle_discard_pile(self):
         """reshuffle discard pile into drawpile"""
         drawpile = np.array(self.discard_pile, dtype=self.card_dtype)
         np.random.shuffle(drawpile)
@@ -205,14 +219,12 @@ class SkyjoGame(object):
             f"expected action is {self.expected_action}, but requested was [{player_id}, place]"
         self.next_action()
         
-        # perform goal check
         if self.game_terminated:
+            warnings.warn(
+                "Attemp playing terminated game. game has been already terminated by pervios player."
+            )
             return True, self.game_terminated
-        game_done = self._player_goal_check(self.players_masked, player_id)
-        if game_done:
-            self.game_terminated = self._evaluate_game(self.players_cards, player_id)
-            return True, self.game_terminated      
-        
+                
         # replace with one of the 0-11 cards of player
         # unmask new card
         # discard replaced card
@@ -222,7 +234,7 @@ class SkyjoGame(object):
         self.players_masked[player_id,place_to_pos] = 1
         self.players_cards[player_id,place_to_pos] = self.holding_card
         self.holding_card = self.fill_masked_unk_value
-        return False, {}
+        return False, []
     
     @staticmethod
     @numba.njit(fastmath=True)
@@ -249,10 +261,12 @@ class SkyjoGame(object):
         return score
     
     def render_game_state(self):
+        card_hand = self.holding_card if -2 <= self.holding_card <= 12 else None
         str_state = \
             f"{'='*7} stats {'='*12} \n" \
             f"next turn: {self.expected_action[1]} by Player {self.expected_action[0]} \n" \
-            f"holding card player {self.expected_action[0]}: {self.holding_card} \n" \
+            f"holding card player {self.expected_action[0]}: " \
+            f"{card_hand} \n" \
             f"discard pile top {self.discard_pile[-1]} \n" 
         return str_state
         
@@ -293,20 +307,21 @@ class SkyjoGame(object):
             rnd = 0
             self.reset()
             won = False
-            while not won:
+            while not self.game_terminated:
                 rnd += 1
                 player_id, action = self.expected_action
-                if self.game_terminated:
-                    break
+                observations, action_mask = self.collect_observation(player_id)
+
                 if action == "draw":
                     from_pile = not from_pile 
-                    observations, action_mask = self.collect_observation(player_id)
-                    drawn_card = self.draw_card(player_id, from_pile)
+                    won, stats = self.draw_card(player_id, from_pile)
                 else:
                     position = np.random.randint(0,12)
                     won, stats = self.play_player(player_id,  position)
-                    if won:
-                        print(self.render_board())
+            else:
+                # upon termination
+                print(self.render_board())
+                
                     
     
 
