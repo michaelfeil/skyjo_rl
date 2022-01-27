@@ -40,7 +40,7 @@ class TorchMaskedActions(DQNTorchModel):
 
         # Compute the predicted action embedding
         action_logits, _ = self.action_embed_model({
-            "obs": input_dict["obs"]['observation']
+            "obs": input_dict["obs"]['observations']
         })
         # turns probit action mask into logit action mask
         inf_mask = torch.clamp(torch.log(action_mask), -1e10, FLOAT_MAX)

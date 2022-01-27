@@ -4,7 +4,7 @@ import ray
 from ray import tune
 from ray.rllib.agents.registry import get_agent_class
 from ray.rllib.env import PettingZooEnv
-from rlskyjo.environment import simple_skyjo_env
+from rlskyjo.environment import simple_skyjo_env_v2
 from ray.rllib.models import ModelCatalog
 from ray.tune.registry import register_env
 from gym.spaces import Box
@@ -25,7 +25,7 @@ if __name__ == "__main__":
     # function that outputs the environment you wish to register.
 
     def env_creator():
-        env = simple_skyjo_env.env(**{"name":env_name, "num_players": 2})
+        env = simple_skyjo_env_v2.env(**{"num_players": 2})
         return env
 
 
@@ -34,23 +34,20 @@ if __name__ == "__main__":
     register_env(env_name,
                  lambda config: PettingZooEnv(env_creator()))
 
-    test_env = PettingZooEnv(env_creator())
-    obs_space = test_env.observation_space
-    print("obs_space", obs_space)
-    act_space = test_env.action_space
-    print("act_space", act_space)
+    sample_env = PettingZooEnv(env_creator())
+    obs_space = sample_env.observation_space
+    act_space = sample_env.action_space
 
     config["multiagent"] = {
         "policies": {
-            "draw": (None, obs_space, act_space, {}),
-            "place": (None, obs_space, act_space, {}),
+            name: (None, obs_space, act_space, {}) for name in sample_env.agents
         },
-        "policy_mapping_fn": lambda agent_id: agent_id.split("_")[0]
+        "policy_mapping_fn": lambda agent_id: agent_id
     }
 
     config["num_gpus"] = int(os.environ.get("RLLIB_NUM_GPUS", "0"))
-    config["log_level"] = "DEBUG"
-    config["num_workers"] = 1
+    # config["log_level"] = "DEBUG"
+    config["num_workers"] = 0
     config["rollout_fragment_length"] = 30
     config["train_batch_size"] = 200
     config["horizon"] = 200
