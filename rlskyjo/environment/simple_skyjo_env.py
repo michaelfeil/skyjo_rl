@@ -117,14 +117,14 @@ class SimpleSkyjoEnv(AECEnv):
                 warnings.warn(f"invalid draw action: {action} not in 12-13")
                 action = np.random.randint(12, 13)
             from_drawpile = bool(action)
-            game_is_over, rewards_final = self.env.draw_card(
+            game_is_over, rewards_final = self.env.action_draw_card(
                 player_id, from_drawpile=from_drawpile
             )
         else:
             if not 0 <= action <= 11:
                 warnings.warn(f"invalid place action: {action} not in 0-11")
                 action = np.random.randint(0, 11)
-            game_is_over, rewards_final = self.env.play_player(
+            game_is_over, rewards_final = self.env.action_place(
                 player_id, place_to_pos=action
             )
 

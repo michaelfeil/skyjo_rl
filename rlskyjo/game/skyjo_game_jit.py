@@ -107,7 +107,7 @@ class SkyjoGame(object):
         counts = counts - 1 # fix the (range)counts to actual value
         return counts, min_masked, self.discard_pile[-1]
     
-    def draw_card(self, from_drawpile: bool):
+    def action_draw_card(self, from_drawpile: bool):
         """draw one card from the"""
         assert len(self.discard_pile) + len(self.drawpile) == 150 - 12*self.n_players
         if from_drawpile:
@@ -126,7 +126,7 @@ class SkyjoGame(object):
             self.drawpile.pop()
         ]
     
-    def play_player(self, player_id: int, picked_card: int, place_to_pos: int) -> Tuple[bool, np.ndarray]:   
+    def action_place(self, player_id: int, picked_card: int, place_to_pos: int) -> Tuple[bool, np.ndarray]:   
         """
         place_to_pos: int between 0 and 11, 0-11 pos, 
         
@@ -200,10 +200,10 @@ def test_game(game):
             from_pile = not from_pile 
             position = random.randint(0,11)
             globals_ = game.observe_global_game_stats()
-            drawn_card = game.draw_card(from_pile)
+            drawn_card = game.action_draw_card(from_pile)
             # print("drawn_card", drawn_card)
             before_cards = game.observe_player(player)
-            won, stats = game.play_player(player, drawn_card, position)
+            won, stats = game.action_place(player, drawn_card, position)
             if won:
                 return
             if rnd > 600:

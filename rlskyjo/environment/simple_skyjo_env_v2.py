@@ -25,12 +25,12 @@ class SimpleSkyjoEnv(AECEnv):
         "video.frames_per_second": 1,
     }
 
-    def __init__(self, num_players=2, time_penalty = 1e-3):
+    def __init__(self, num_players=2, time_penalty = 0.0, score_penalty=1.2):
         super().__init__()
         self.num_players = num_players
         self.time_penalty = time_penalty
 
-        self.table = SkyjoGame(num_players)
+        self.table = SkyjoGame(num_players, score_penalty=score_penalty)
 
         self.agents = [f"player_{i}" for i in range(num_players)]
         self.possible_agents = self.agents[:]
@@ -80,11 +80,10 @@ class SimpleSkyjoEnv(AECEnv):
             score: np.array of len(players) e.g. np.array([35,65,50])
 
         returns:
-            reward: np.array [len(players)] e.g. np.array([ 25,-20,-5])
+            reward: np.array [len(players)] e.g. np.array([ 16,-14,+1])
         """
         score = np.array(score)
-        avg = np.mean(score)
-        return -score + avg
+        return -score + np.mean(score) + 1
 
     def _name_to_player_id(self, name: str) -> int:
         """convert agent name to int  e.g. player_1 to int(1)"""
@@ -124,22 +123,11 @@ class SimpleSkyjoEnv(AECEnv):
             return self._was_done_step(action)
 
         player_id = self._name_to_player_id(current_agent)
-        expected_action = self._expected_agentname_and_action()[1]
-        if expected_action == "draw":
-            if not 12 <= action <= 13:
-                warnings.warn(f"invalid draw action: {action} not in 12-13")
-                action = np.random.randint(12, 13)
-            game_is_over, score_final = self.table.draw_card(
-                player_id, draw_from=action
-            )
-        else:
-            if not 0 <= action <= 11:
-                warnings.warn(f"invalid place action: {action} not in 0-11")
-                action = np.random.randint(0, 11)
-            game_is_over, score_final = self.table.play_player(
-                player_id, place_to_pos=action
-            )
 
+        game_is_over, score_final = self.table.act(
+            player_id, action_int=action
+        )
+        
         if game_is_over:
             # current player has terminated the game for all. gather rewards
             self.rewards = self._convert_to_dict(self._calc_final_rewards(score_final))

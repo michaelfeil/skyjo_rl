@@ -9,7 +9,7 @@ skyjo_rl
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
-A RL repo for playing the card game 'SkyBo'
+A RL repo for playing the card game 'skyjo'
 
 Project Organization
 ------------
@@ -56,8 +56,8 @@ Project Organization
 
 ## Install
 ```
-conda create --name  skybo python=3.9
-conda activate skybo
+conda create --name  skyjo python=3.9
+conda activate skyjo
 pip install -r requirements.txt
 ```
 

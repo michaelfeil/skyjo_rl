@@ -231,7 +231,7 @@ man_pages = [
 texinfo_documents = [
     ('index', 'rlskyjo', u'rlskyjo Documentation',
      u"Michael Feil", 'rlskyjo',
-     'A RL repo for playing the card game SkyBo', 'Miscellaneous'),
+     'A RL repo for playing the card game SkyJo', 'Miscellaneous'),
 ]
 
 # Documents to append as an appendix to all manuals.
