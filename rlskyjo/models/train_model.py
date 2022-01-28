@@ -15,24 +15,19 @@ torch, nn = try_import_torch()
 ray.init(local_mode=True)
 
 
-    
 if __name__ == "__main__":
     alg_name = "DQN"
-    env_name  = "pettingzoo_skyjo"
-    ModelCatalog.register_custom_model(
-        "pa_model", TorchMaskedActions
-    )
+    env_name = "pettingzoo_skyjo"
+    ModelCatalog.register_custom_model("pa_model", TorchMaskedActions)
     # function that outputs the environment you wish to register.
 
     def env_creator():
         env = simple_skyjo_env_v2.env(**{"num_players": 2})
         return env
 
-
     config = deepcopy(get_agent_class(alg_name)._default_config)
 
-    register_env(env_name,
-                 lambda config: PettingZooEnv(env_creator()))
+    register_env(env_name, lambda config: PettingZooEnv(env_creator()))
 
     sample_env = PettingZooEnv(env_creator())
     obs_space = sample_env.observation_space
@@ -42,7 +37,7 @@ if __name__ == "__main__":
         "policies": {
             name: (None, obs_space, act_space, {}) for name in sample_env.agents
         },
-        "policy_mapping_fn": lambda agent_id: agent_id
+        "policy_mapping_fn": lambda agent_id: agent_id,
     }
 
     config["num_gpus"] = int(os.environ.get("RLLIB_NUM_GPUS", "0"))
@@ -56,7 +51,7 @@ if __name__ == "__main__":
     config["model"] = {
         "custom_model": "pa_model",
     }
-    config['n_step'] = 1
+    config["n_step"] = 1
 
     # config["exploration_config"] = {
     #     # The Exploration class to use.
@@ -66,16 +61,14 @@ if __name__ == "__main__":
     #     "final_epsilon": 0.0,
     #     "epsilon_timesteps": 100000,  # Timesteps over which to anneal epsilon.
     # }
-    config['hiddens'] = []
-    config['dueling'] = False
-    config['env'] = env_name
-
-    
+    config["hiddens"] = []
+    config["dueling"] = False
+    config["env"] = env_name
 
     tune.run(
         alg_name,
         name="DQN",
         stop={"timesteps_total": 10000000},
         checkpoint_freq=10,
-        config=config
-        )
+        config=config,
+    )

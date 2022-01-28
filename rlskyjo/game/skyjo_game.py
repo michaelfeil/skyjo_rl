@@ -8,15 +8,16 @@ import warnings
 try:
     from numba import njit
 except ImportError:
+
     def njit(fastmath):
         def decorator(func):
-            return func 
+            return func
+
         return decorator
 
 
-
 class SkyjoGame(object):
-    def __init__(self, num_players: int = 2, score_penalty = 2) -> None:
+    def __init__(self, num_players: int = 2, score_penalty=2) -> None:
         """ """
         assert 0 < num_players <= 12, "can be played up to 6/theoretical 12 players"
         # init objects
@@ -31,7 +32,7 @@ class SkyjoGame(object):
         self.card_dtype = np.int8
         self._name_draw = "draw"
         self._name_place = "place"
-        
+
         # reset
         self.reset()
 
@@ -46,12 +47,11 @@ class SkyjoGame(object):
             self.num_players, -1
         )
 
+        # discard_pile: first in last out
         self.drawpile, self.discard_pile = self._reshuffle_discard_pile(
             drawpile[self.num_players * 12 :]
         )
 
-        # discard_pile: first in last out
-        
         self.players_masked = self.reset_card_mask(self.num_players, self.card_dtype)
         self.reset_start_player()
         assert self.expected_action[1] == self._name_draw, "expect to draw after reset"
@@ -79,10 +79,10 @@ class SkyjoGame(object):
         # forward to random point
         for _ in range(1 + random_starter):
             self.next_action()
-    
+
     @staticmethod
     @njit(fastmath=True)
-    def _reshuffle_discard_pile(old_pile) -> Tuple[List[int],List[int]]:
+    def _reshuffle_discard_pile(old_pile) -> Tuple[List[int], List[int]]:
         """reshuffle discard pile into drawpile.
 
         old_pile -> shuffle as new drawpile
@@ -92,10 +92,11 @@ class SkyjoGame(object):
         drawpile = list(old_pile)
         discard_pile = list([drawpile.pop()])
         return drawpile, discard_pile
-    
+
     # [end: reset utils]
 
     def next_action(self):
+        """set next expected action"""
         self.expected_action = next(self.actions)
 
     # [start: collect observation]
@@ -107,12 +108,18 @@ class SkyjoGame(object):
             min_n_hidden,
             top_discard,
         ) = self.observe_global_game_stats()
-        player_obs = self.observe_player(player_id)
+        player_obs = self._jit_known_player_cards(
+            self.players_cards,
+            self.players_masked,
+            fill_unknown=self.fill_masked_unk_value,
+            fill_refunded=self.fill_masked_refunded_value,
+            player_id=player_id,
+        )
 
         obs = np.concatenate(
             (
                 player_obs,
-                [min(min_cards_sum, np.iinfo(self.card_dtype).max)],
+                [min(min_cards_sum, 127)],
                 [min_n_hidden],
                 stats_counts,
                 [top_discard],
@@ -124,8 +131,7 @@ class SkyjoGame(object):
             self.obs_shape = obs.shape
         else:
             assert obs.shape == self.obs_shape
-            
-            
+
         action_mask = self._jit_action_mask(
             self.players_masked, player_id, self.expected_action[1]
         )
@@ -140,7 +146,7 @@ class SkyjoGame(object):
             # discard hand card and reveal an masked card
             mask_place2 = (players_masked[player_id] == 2).astype(np.int8)
             mask_draw = np.zeros(2, dtype=np.int8)
-        else: # draw
+        else:  # draw
             # only draw allowed
             mask_place = np.zeros(players_masked[player_id].shape, dtype=np.int8)
             mask_place2 = np.zeros(players_masked[player_id].shape, dtype=np.int8)
@@ -187,15 +193,6 @@ class SkyjoGame(object):
         count_hidden = np.array(list(count_hidden))
         return counts.flatten(), np.min(known_cards_sum), np.min(count_hidden), pile_top
 
-    def observe_player(self, player_id):
-        return self._jit_known_player_cards(
-            self.players_cards,
-            self.players_masked,
-            fill_unknown=self.fill_masked_unk_value,
-            fill_refunded=self.fill_masked_refunded_value,
-            player_id=player_id,
-        )
-
     @staticmethod
     @njit(fastmath=True)
     def _jit_known_player_cards(
@@ -227,7 +224,7 @@ class SkyjoGame(object):
     # [end: collect observation]
 
     # [start: perform actions]
-    
+
     def act(self, player_id: int, action_int: int):
         """perform actions"""
         assert (
@@ -240,21 +237,20 @@ class SkyjoGame(object):
                 "Attemp playing terminated game. game has been already terminated by pervios player."
             )
             return True, self.game_terminated
-        
-        # prepare for next action
-        self.next_action()
-        
+
         if 24 <= action_int <= 25:
-            assert self.hand_card == self.fill_masked_unk_value, \
-                f"ILLEGAL ACTION. requested draw action {self.render_action_explainer(action_int)}" \
+            assert self.hand_card == self.fill_masked_unk_value, (
+                f"ILLEGAL ACTION. requested draw action {self.render_action_explainer(action_int)}"
                 f"already have a hand card {self.hand_card} "
+            )
             return self.action_draw_card(player_id, action_int)
         else:
-            assert self.hand_card != self.fill_masked_unk_value, \
-                f"ILLEGAL ACTION. requested place action " \
+            assert self.hand_card != self.fill_masked_unk_value, (
+                f"ILLEGAL ACTION. requested place action "
                 f"but not having a hand card {self.hand_card} "
+            )
             return self.action_place(player_id, action_int)
-        
+
     def action_draw_card(self, player_id: int, draw_from: int):
         """
         args:
@@ -266,10 +262,12 @@ class SkyjoGame(object):
             final_scores: list(len(n_players)) if game over
         """
         # perform goal check, games end if any player has a open 12-card deck before picking up card.
-        
+
         game_done = self._player_goal_check(self.players_masked, player_id)
         if game_done:
-            self.game_terminated = self._evaluate_game(self.players_cards, player_id, score_penalty=self.score_penalty)
+            self.game_terminated = self._evaluate_game(
+                self.players_cards, player_id, score_penalty=self.score_penalty
+            )
             return True, self.game_terminated
 
         # goal is not reached. continue drawing action
@@ -286,10 +284,12 @@ class SkyjoGame(object):
             # discard pile cannot go empty by definition
             self.hand_card = self.discard_pile.pop()
         # action done
+        self.next_action()
         return False, []
 
-
-    def action_place(self, player_id: int, action_place_to_pos: int) -> Tuple[bool, np.ndarray]:
+    def action_place(
+        self, player_id: int, action_place_to_pos: int
+    ) -> Tuple[bool, np.ndarray]:
         """
         args:
             player_id: int, player who is playing
@@ -299,24 +299,27 @@ class SkyjoGame(object):
             game over: bool winner_id
             final_scores: list(len(n_players)) if game over
         """
-        
-        if action_place_to_pos in range(0,12):
+
+        if action_place_to_pos in range(0, 12):
             # replace one of the 0-11 cards with hand card of player
             # unmask new card
             # discard deck card
             self.discard_pile.append(self.players_cards[player_id, action_place_to_pos])
             self.players_masked[player_id, action_place_to_pos] = 1
             self.players_cards[player_id, action_place_to_pos] = self.hand_card
-        else: 
+        else:
             # discard hand card, reveal a yet unrevealed card
             place_pos = action_place_to_pos - 12
-            assert self.players_masked[player_id, place_pos] == 2, \
-                f"illegal action {self.render_action_explainer(action_place_to_pos)}."\
+            assert self.players_masked[player_id, place_pos] == 2, (
+                f"illegal action {self.render_action_explainer(action_place_to_pos)}."
                 f"card is already revealed: {self.players_masked[player_id]}"
+            )
             self.discard_pile.append(self.hand_card)
             self.players_masked[player_id, place_pos] = 1
-        
+
+        # action done
         self.hand_card = self.fill_masked_unk_value
+        self.next_action()
         return False, []
 
     # [end: perform actions]
@@ -329,7 +332,9 @@ class SkyjoGame(object):
 
     @staticmethod
     @njit(fastmath=True)
-    def _evaluate_game(players_cards, player_won_id, score_penalty: float = 2.0) -> List[int]:
+    def _evaluate_game(
+        players_cards, player_won_id, score_penalty: float = 2.0
+    ) -> List[int]:
         """
         calculate game scores
         """
@@ -368,7 +373,7 @@ class SkyjoGame(object):
         for pl in range(self.num_players):
             str_board += self.render_player(pl, render_cards_open)
         return str_board
-    
+
     def render_game_stats(self):
         """render game statistics"""
         card_hand = self.hand_card if -2 <= self.hand_card <= 12 else "empty"
@@ -383,57 +388,52 @@ class SkyjoGame(object):
 
         return str_stats
 
-    def _render_player_cards(self, player_id, render_cards_open):    
+    def _render_player_cards(self, player_id, render_cards_open):
         array = self.players_cards[player_id].astype(np.str_)
-        
-        if render_cards_open:        
+
+        if render_cards_open:
             array[self.players_masked[player_id] == 2] = np.char.add(
                 np.array(["x"], dtype=np.str_),
-                array[self.players_masked[player_id] == 2]
-                )
+                array[self.players_masked[player_id] == 2],
+            )
         else:
             array[self.players_masked[player_id] == 2] = "x"
-        
+
         array[self.players_masked[player_id] == 0] = "d"
         array = array.reshape(3, -1)
         array = np.array2string(
-            array,
-            separator='\t ', 
-            formatter={
-                "str_kind": lambda x: str(x)
-            }
+            array, separator="\t ", formatter={"str_kind": lambda x: str(x)}
         )
         return array
 
-    
     def render_player(self, player_id, render_cards_open=False):
         """render cards of 1 player"""
         str_pl = f"{'='*7} Player {player_id} {'='*10} \n"
         str_pl += self._render_player_cards(player_id, render_cards_open) + "\n"
         return str_pl
-    
+
     def render_action_explainer(self, action_int: int):
-        assert action_int in range(0,26), "action not valid action int {action_int}"
-     
+        assert action_int in range(0, 26), "action not valid action int {action_int}"
+
         if action_int == 24:
             return "draw from drawpile"
         elif action_int == 25:
             return "draw from discard pile"
-        
-        if action_int in range(0,12):
+
+        if action_int in range(0, 12):
             place_id = action_int
             result = f"place card ({action_int}) - "
-        elif action_int in range(12,24):
+        elif action_int in range(12, 24):
             place_id = action_int - 12
             result = f"handcard discard & reveal card ({action_int}) - "
-        
+
         col = place_id % 4
         row = math.floor(place_id / 3)
-        
+
         result += f"col:{col} row:{row}"
-        
+
         return result
-            
+
     # [end: render utils]
 
     # [start: test utils]
@@ -452,12 +452,12 @@ class SkyjoGame(object):
 
                 # pick a valid random action
                 action = self.random_admissible_policy(observations, action_mask)
-            
+
                 # print(self.render_table())
                 # print(self.render_action_explainer(action))
-                
+
                 won, stats = self.act(player_id, action)
-                
+
                 # print(self.render_table())
             else:
                 # upon termination
