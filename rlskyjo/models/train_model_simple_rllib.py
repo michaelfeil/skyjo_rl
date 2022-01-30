@@ -152,7 +152,7 @@ def tune_training_loop(timesteps_total=10000):
 
 def manual_training_loop(timesteps_total=10000):
     """train trainer and sample"""
-    
+
     trainer, env, ppo_config = prepare_train()
     trainer_trained = train(trainer, max_steps=timesteps_total)
 

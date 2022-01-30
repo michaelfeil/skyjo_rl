@@ -1,4 +1,5 @@
 from numba import config
+
 config.DISABLE_JIT = True
 import pytest
 from rlskyjo.environment import skyjo_env
@@ -7,8 +8,9 @@ from rlskyjo.environment.skyjo_env import DEFAULT_CONFIG, env
 from rlskyjo.environment.vanilla_env_example import simple_episode
 import numpy as np
 
+
 def test_skyjo_env_options():
-    
+
     from itertools import product
 
     def build_config_env(
@@ -45,16 +47,13 @@ def test_skyjo_env_options():
         print(count, config_env)
         simple_episode(config_env, verbose=(1 if count % 50 == 0 else 0))
 
+
 @pytest.mark.skip
-def test_reproducability(seed = 42, n_runs=2):
+def test_reproducability(seed=42, n_runs=2):
     """create a vanilla example"""
-    
-    rewards = {
-        i: [] for i in range(n_runs)
-    }
-    observations = {
-        i: [] for i in range(n_runs)
-    }
+
+    rewards = {i: [] for i in range(n_runs)}
+    observations = {i: [] for i in range(n_runs)}
     config_env = DEFAULT_CONFIG
     for i in range(2):
         env_pettingzoo = skyjo_env.env(**config_env)
@@ -62,7 +61,9 @@ def test_reproducability(seed = 42, n_runs=2):
         rng = np.random.default_rng(seed)
         env_pettingzoo.reset()
 
-        for agent in env_pettingzoo.agent_iter(max_iter=300 * config_env["num_players"]):
+        for agent in env_pettingzoo.agent_iter(
+            max_iter=300 * config_env["num_players"]
+        ):
             # get observation (state) for current agent:
             obs, reward, done, info = env_pettingzoo.last()
 
@@ -73,7 +74,7 @@ def test_reproducability(seed = 42, n_runs=2):
                 action_mask = obs["action_mask"]
                 # action given observation
                 action = policy_ra(observation, action_mask, rng=rng)
-                
+
                 # perform action
                 env_pettingzoo.step(action)
             else:
@@ -84,7 +85,5 @@ def test_reproducability(seed = 42, n_runs=2):
     print(rewards, observations)
 
 
-
 if __name__ == "__main__":
     test_reproducability()
-
