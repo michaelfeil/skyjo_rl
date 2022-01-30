@@ -1,7 +1,7 @@
 name: Python3.9 pytest
 # do not change name
 on: 
-  pull_request:
+  push:
     branches:
     - master
     - dev
@@ -11,14 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 5
-
-    env:
-      WANDB_MODE: offline
-      WANDB_ENTITY: senti_anal
-      WANDB_PROJECT: BERT
-      # WANDB_API_KEY=$YOUR_API_KEY
-      WANDB_NAME: "github ci tests"
-      WANDB_NOTES: "Python3.9 pytest in github actions"
 
     steps:
     - uses: actions/checkout@v2
@@ -32,13 +24,9 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -r requirements.txt
+        pip install -r requirements_dev.txt
         pip install -e .
     
-    - name: pull from dvc
-      run: |
-        # pull model and cache of dataset, to avoid downloading.
-        dvc pull
-
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
@@ -56,40 +44,7 @@ jobs:
 
     - name: Generate Report
       run: |
-        coverage run -m --source=./opensentiment pytest tests -m "not (download or long)"
+        coverage run -m --source=./rlskyjo pytest tests 
         coverage xml
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v2
-
-  gcp-workloads:
-    name: gcp-deplyment
-    runs-on: ubuntu-latest
-    needs: [build-linux]
-
-    permissions:
-      contents: 'read'
-      id-token: 'write'
-    
-    # if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master'
-    steps:
-    - uses: actions/checkout@v2
-      with:
-          path: 'branch-dir'
-    # checkout repo
-      
-    - id: 'auth'
-    # authenticate to google using this repo name 
-    # https://github.com/google-github-actions/auth#examples (see workload federation)
-      name: 'Authenticate to Google Cloud'
-      uses: 'google-github-actions/auth@v0'
-      with:
-        workload_identity_provider: 'projects/346707017144/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
-        service_account: 'gh-service-account@sensi-anal.iam.gserviceaccount.com'
-    # now authenticated to gcp
-
-    # - id: 'upload-file'
-    #   uses: 'google-github-actions/upload-cloud-storage@v0'
-    #   with:
-    #     path: './branch-dir/setup.py'
-    #     destination: 'gs://model_senti_anal/gh-ci'
-        
