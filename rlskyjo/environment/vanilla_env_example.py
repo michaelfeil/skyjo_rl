@@ -2,7 +2,6 @@ from rlskyjo.environment import skyjo_env
 from rlskyjo.game.skyjo import SkyjoGame
 from rlskyjo.models.random_admissible_policy import policy_ra
 
-
 def simple_episode(config, verbose=0):
     """create a vanilla example"""
 
@@ -41,11 +40,5 @@ def simple_episode(config, verbose=0):
 
 
 if __name__ == "__main__":
-    env_config = {
-        "num_players": 2,
-        "score_penalty": 2.0,
-        "observe_other_player_indirect": True,
-        "mean_reward": 1.0,
-        "reward_refunded": 0.001,
-    }
-    simple_episode(config=env_config)
+    print(f"running with config: {skyjo_env.DEFAULT_CONFIG}")
+    simple_episode(config=skyjo_env.DEFAULT_CONFIG)

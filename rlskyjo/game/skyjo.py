@@ -602,34 +602,6 @@ class SkyjoGame(object):
 
     # [end: render utils]
 
-    # # [start: test utils]
-
-    # def _testrun(self) -> None:
-    #     """perform random run to test game"""
-    #     for _ in range(5000):
-    #         from_pile = True
-    #         rnd = 0
-    #         self.reset()
-    #         won = False
-    #         while not self.is_terminated:
-    #             rnd += 1
-    #             player_id, action_expected = self.expected_action
-    #             obs, action_mask = self.collect_observation(player_id)
-
-    #             # pick a valid random action
-    #             action = self.policy_ra(obs, action_mask)
-
-    #             print(self.render_table())
-    #             print(self.render_action_explainer(action))
-
-    #             won = self.act(player_id, action)
-
-    #             print(self.render_table())
-    #         else:
-    #             # upon termination
-    #             print(self.render_table())
-
-    # # [end: test utils]
 
 
 if __name__ == "__main__":
