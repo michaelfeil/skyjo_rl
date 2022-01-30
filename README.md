@@ -38,9 +38,9 @@ Project Organization
     ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
     │                         generated with `pip freeze > requirements.txt`
     │
-    ├── setup.py           <- makes project pip installable (pip install -e .) so rlskyjo can be imported
-    ├── rlskyjo           <- Source code for use in this project.
-    │   ├── __init__.py    <- Makes rlskyjo a Python module
+    ├── setup.py           <- makes project pip installable (pip install -e .) so skyjo_rl can be imported
+    ├── skyjo_rl           <- Source code for use in this project.
+    │   ├── __init__.py    <- Makes skyjo_rl a Python module
     │   │
     │   ├── features       <- Scripts to turn raw data into features for modeling
     │   │   └── build_features.py
@@ -70,15 +70,15 @@ pip install -r requirements.txt
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/michaelfeil/rlskyjo.svg?style=for-the-badge
-[contributors-url]: https://github.com/michaelfeil/rlskyjo/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/michaelfeil/rlskyjo.svg?style=for-the-badge
-[forks-url]: https://github.com/michaelfeil/rlskyjo/network/members
-[stars-shield]: https://img.shields.io/github/stars/michaelfeil/rlskyjo.svg?style=for-the-badge
-[stars-url]: https://github.com/michaelfeil/rlskyjo/stargazers
-[issues-shield]: https://img.shields.io/github/issues/michaelfeil/rlskyjo.svg?style=for-the-badge
-[issues-url]: https://github.com/michaelfeil/rlskyjo/issues
-[license-shield]: https://img.shields.io/github/license/michaelfeil/rlskyjo.svg?style=for-the-badge
-[license-url]: https://github.com/michaelfeil/rlskyjo/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/michaelfeil/skyjo_rl.svg?style=for-the-badge
+[contributors-url]: https://github.com/michaelfeil/skyjo_rl/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/michaelfeil/skyjo_rl.svg?style=for-the-badge
+[forks-url]: https://github.com/michaelfeil/skyjo_rl/network/members
+[stars-shield]: https://img.shields.io/github/stars/michaelfeil/skyjo_rl.svg?style=for-the-badge
+[stars-url]: https://github.com/michaelfeil/skyjo_rl/stargazers
+[issues-shield]: https://img.shields.io/github/issues/michaelfeil/skyjo_rl.svg?style=for-the-badge
+[issues-url]: https://github.com/michaelfeil/skyjo_rl/issues
+[license-shield]: https://img.shields.io/github/license/michaelfeil/skyjo_rl.svg?style=for-the-badge
+[license-url]: https://github.com/michaelfeil/skyjo_rl/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/michael-feil
