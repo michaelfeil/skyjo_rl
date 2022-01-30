@@ -1,12 +1,13 @@
 from numba import config
 
 config.DISABLE_JIT = True
+import numpy as np
 import pytest
+
 from rlskyjo.environment import skyjo_env
-from rlskyjo.models.random_admissible_policy import policy_ra
 from rlskyjo.environment.skyjo_env import DEFAULT_CONFIG, env
 from rlskyjo.environment.vanilla_env_example import simple_episode
-import numpy as np
+from rlskyjo.models.random_admissible_policy import policy_ra
 
 
 def test_skyjo_env_options():
