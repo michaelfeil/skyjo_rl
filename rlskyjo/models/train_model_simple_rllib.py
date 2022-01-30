@@ -59,24 +59,20 @@ def prepare_train() -> Tuple[ppo.PPOTrainer, PettingZooEnv]:
     return trainer, env, ppo_config
 
 
-def train(trainer, max_steps=2e6, max_iters=100):
+def train(trainer, max_steps=2e6):
     # run manual training loop and print results after each iteration
-    max_steps = 2e6
-    max_iters = 100
-    for iters in range(max_iters):
+    iters = 0
+    while True:
+        iters += 1
         result = trainer.train()
-        if iters % 2 == 0:
-            print(pretty_print(result))
+        print(pretty_print(result))
         # stop training if the target train steps or reward are reached
         if result["timesteps_total"] >= max_steps:
             print(
                 f"training done, because max_steps {max_steps} {result['timesteps_total']} reached"
             )
             break
-    else:
-        print(f"training done, because max_iters {max_iters} reached")
     # manual test loop
-    print("Finished training. Running manual test/inference loop.")
     return trainer
 
 
@@ -102,6 +98,7 @@ def load_ray(path, ppo_config):
 
 
 def sample_trainer(trainer, env):
+    print("Finished training. Running manual test/inference loop.")
     obs = env.reset()
     done = {"__all__": False}
     # run one iteration until done
