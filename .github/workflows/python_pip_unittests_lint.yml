@@ -35,10 +35,10 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics    
     
     - name: test create shinx docs
-      # create shpinx api autodocs of opensentiment and move them to docs
+      # create shpinx api autodocs of rlskyjo and move them to docs
       # makefile: make html build the the docs/_build/html/
       run: |
-        sphinx-apidoc -o ./docs ./opensentiment 
+        sphinx-apidoc -o ./docs ./rlskyjo
         cd docs
         make html
 

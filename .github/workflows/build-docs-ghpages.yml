@@ -35,7 +35,7 @@ jobs:
       # makefile: make html build the the docs/_build/html/
       run: |
         cd branch-dir
-        sphinx-apidoc -o ./docs ./opensentiment 
+        sphinx-apidoc -o ./docs ./rlskyjo
         cd docs
         make html
     
