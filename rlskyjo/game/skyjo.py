@@ -94,7 +94,7 @@ class SkyjoGame(object):
         """set seed for numba"""
         try:
             []  # fails in numba
-        except:
+        except Exception:
             np.random.seed(value)
 
     @staticmethod

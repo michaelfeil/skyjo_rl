@@ -18,7 +18,7 @@ def sample_run(games=5000, verbose=0, config={"num_players": 2}):
                 print(skyjo_obj_game.render_table())
                 print(skyjo_obj_game.render_action_explainer(action))
 
-            won = skyjo_obj_game.act(player_id, action)
+            skyjo_obj_game.act(player_id, action)
 
             if verbose:
                 print(skyjo_obj_game.render_table())
