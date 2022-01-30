@@ -1,0 +1,29 @@
+rlskyjo.game package
+====================
+
+Submodules
+----------
+
+rlskyjo.game.sample\_game module
+--------------------------------
+
+.. automodule:: rlskyjo.game.sample_game
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rlskyjo.game.skyjo module
+-------------------------
+
+.. automodule:: rlskyjo.game.skyjo
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: rlskyjo.game
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,31 @@
+rlskyjo package
+===============
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   rlskyjo.environment
+   rlskyjo.game
+   rlskyjo.models
+
+Submodules
+----------
+
+rlskyjo.utils module
+--------------------
+
+.. automodule:: rlskyjo.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: rlskyjo
+   :members:
+   :undoc-members:
+   :show-inheritance:
