@@ -3,8 +3,8 @@ skyjo_rl
 
 Multi-Agent Reinforcement Learning Environment for the card game SkyJo, compatible with PettingZoo and RLLIB
 
-[![codecov](https://codecov.io/gh/johannespischinger/senti_anal/branch/dev/graph/badge.svg?token=CI49NOMH1J)](https://codecov.io/gh/michaelfeil/skyjo_rl)![CI pytest](https://codecov.io/gh/michaelfeil/skyjo_rl/actions/workflows/python_pip_unittests_lint.yml/badge.svg)
-![build-docs](https://codecov.io/gh/michaelfeil/skyjo_rl/actions/workflows/build-docs-ghpages.yml/badge.svg?branch=dev)
+[![codecov](https://codecov.io/gh/michaelfeil/skyjo_rl/branch/master/graph/badge.svg?token=56TSLUCER8)](https://codecov.io/gh/michaelfeil/skyjo_rl)![CI pytest](https://codecov.io/gh/michaelfeil/skyjo_rl/actions/workflows/python_pip_unittests_lint.yml/badge.svg)
+![build-docs](https://codecov.io/gh/michaelfeil/skyjo_rl/actions/workflows/build-docs-ghpages.yml/badge.svg)
 
 [Read the docs](https://michaelfeil.github.io/skyjo_rl/)
 <!-- PROJECT SHIELDS -->
