@@ -50,9 +50,10 @@ Project Organization
 
 ## Install
 ```
-conda create --name  skyjo python=3.9
+conda create --name skyjo python=3.9
 conda activate skyjo
 pip install -r requirements.txt
+pip install -r requirements_dev.txt
 pre-commit install
 ```
 
