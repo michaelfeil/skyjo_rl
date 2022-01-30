@@ -5,6 +5,10 @@ on:
     branches:
     - master
     - dev
+  push:
+    pull-request:
+    - master
+    - dev
     
 jobs:
   build-linux:
