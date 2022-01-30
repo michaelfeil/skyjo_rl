@@ -19,12 +19,12 @@ except ImportError:
 
 class SkyjoGame(object):
     def __init__(
-        self, num_players: int = 2, score_penalty=2, observe_other_player_indirect=False
+        self, num_players: int = 3, score_penalty=2, observe_other_player_indirect=False
     ) -> None:
         """ """
         assert (
             0 < num_players <= 12
-        ), "Skyjo can be played from 1 up to 6 (recommended) / 12 (theoretical) players"
+        ), "Skyjo can be played from 1 up to 8 (recommended) / 12 (theoretical) players"
 
         # init objects
         self.num_players = num_players
@@ -67,13 +67,13 @@ class SkyjoGame(object):
 
         # discard_pile: first in last out
         self.drawpile, self.discard_pile = self._reshuffle_discard_pile(
-            drawpile[self.num_players * 12:]
+            drawpile[self.num_players * 12 :]
         )
 
         self.players_masked = self._reset_card_mask(self.num_players, self.card_dtype)
         self._reset_start_player()
         assert self.expected_action[1] == self._name_draw, "expect to draw after reset"
-    
+
     @staticmethod
     @njit
     def _new_drawpile(card_dtype):
@@ -81,22 +81,22 @@ class SkyjoGame(object):
         drawpile = np.repeat(np.arange(-2, 13, dtype=card_dtype), 10)
         np.random.shuffle(drawpile)
         return drawpile
-    
+
     def set_seed(self, value):
         """adds a random number generator. does not affect global np.random.seed()"""
         self.rng = np.random.default_rng(value)
-        self._set_seed_njit(value+1)
+        self._set_seed_njit(value + 1)
         self.reset()
-    
+
     @staticmethod
     @njit
     def _set_seed_njit(value):
         """set seed for numba"""
         try:
-            [] # fails in numba
+            []  # fails in numba
         except:
             np.random.seed(value)
-    
+
     @staticmethod
     @njit(fastmath=True)
     def _reset_card_mask(num_players, card_dtype):
@@ -161,7 +161,7 @@ class SkyjoGame(object):
             self.players_cards,
             self.players_masked,
             np.array(self.discard_pile, dtype=self.players_cards.dtype),
-            count_players_cards= not self.observe_other_player_indirect,
+            count_players_cards=not self.observe_other_player_indirect,
         )
 
         # get player observation
@@ -317,7 +317,7 @@ class SkyjoGame(object):
 
         if self.is_terminated:
             warnings.warn(
-                "Attemp playing terminated game."\
+                "Attemp playing terminated game."
                 " game has been already terminated by pervios player."
             )
             return True
@@ -587,6 +587,7 @@ class SkyjoGame(object):
 
         return result
 
+    @classmethod
     def render_actions(cls):
         """possible actions"""
         array = np.char.add(np.arange(12).reshape(4, -1).T.astype(np.str_), "/")
@@ -616,7 +617,7 @@ class SkyjoGame(object):
     #             obs, action_mask = self.collect_observation(player_id)
 
     #             # pick a valid random action
-    #             action = self.random_admissible_policy(obs, action_mask)
+    #             action = self.policy_ra(obs, action_mask)
 
     #             print(self.render_table())
     #             print(self.render_action_explainer(action))

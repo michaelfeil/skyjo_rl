@@ -1,8 +1,9 @@
 from rlskyjo.game.skyjo import SkyjoGame
-from rlskyjo.models.random_admissible_policy import random_admissible_policy
+from rlskyjo.models.random_admissible_policy import policy_ra
 
-def sample_run(games=5000, verbose=0):
-    skyjo_obj_game = SkyjoGame(2)
+
+def sample_run(games=5000, verbose=0, config={"num_players": 2}):
+    skyjo_obj_game = SkyjoGame(**config)
     for _ in range(games):
         rnd = 0
         skyjo_obj_game.reset()
@@ -12,7 +13,7 @@ def sample_run(games=5000, verbose=0):
             obs, action_mask = skyjo_obj_game.collect_observation(player_id)
 
             # pick a valid random action
-            action = random_admissible_policy(obs, action_mask)
+            action = policy_ra(obs, action_mask)
             if verbose:
                 print(skyjo_obj_game.render_table())
                 print(skyjo_obj_game.render_action_explainer(action))
@@ -23,7 +24,7 @@ def sample_run(games=5000, verbose=0):
                 print(skyjo_obj_game.render_table())
         else:
             # upon termination
-            if verbose: 
+            if verbose:
                 print(skyjo_obj_game.render_table())
 
 

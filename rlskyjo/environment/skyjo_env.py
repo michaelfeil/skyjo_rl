@@ -217,14 +217,12 @@ class SimpleSkyjoEnv(AECEnv):
         part of the PettingZoo API"""
         if mode == "human":
             print(self.table.render_table())
-        else:
-            raise NotImplementedError()
 
     def close(self):
         """part of the PettingZoo API"""
         pass
-    
-    def seed(self, seed = None):
+
+    def seed(self, seed=None):
         """seed the environment.
          does not affect global np.random.seed()
         part of the PettingZoo API"""
@@ -267,47 +265,3 @@ class SimpleSkyjoEnv(AECEnv):
         return f"player_{a[0]}", a[1]
 
     # end utils
-
-
-from rlskyjo.models.random_admissible_policy import random_admissible_policy
-
-
-def test_skyjoenv(n_trials=100):
-    i_episode = 1
-    while i_episode <= n_trials:
-        num_players = int(np.random.randint(1, 13))
-        env_pettingzoo = SimpleSkyjoEnv(
-            num_players=num_players,
-            score_penalty=float(1 + np.random.rand() * 2),
-            observe_other_player_indirect=bool(np.random.randint(0, 2)),
-            mean_reward=float(-1 + np.random.rand() * 2),
-            reward_refunded=float(np.random.choice([0.0, 0.01])),
-        )
-        i_episode += 1
-        env_pettingzoo.reset()
-        env_pettingzoo.render()
-        for agent in env_pettingzoo.agent_iter(max_iter=200 * num_players):
-            # get observation (state) for current agent:
-            obs, reward, done, info = env_pettingzoo.last()
-
-            # store current state
-            if not done:
-                # choose action using epsilon_greedy_policy()
-                # your code here
-                observation = obs["observations"]
-                action_mask = obs["action_mask"]
-                action = random_admissible_policy(observation, action_mask)
-
-                env_pettingzoo.step(action)
-            else:
-                # agent is done
-                env_pettingzoo.step(None)
-                env_pettingzoo.render()
-                print("done", reward)
-                break
-        else:
-            raise Exception("not possible")
-
-
-if __name__ == "__main__":
-    test_skyjoenv()

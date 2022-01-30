@@ -1,16 +1,16 @@
 from rlskyjo.environment import skyjo_env
 from rlskyjo.game.skyjo import SkyjoGame
-from rlskyjo.models.random_admissible_policy import random_admissible_policy
+from rlskyjo.models.random_admissible_policy import policy_ra
 
 
-def simple_episode(config):
+def simple_episode(config, verbose=0):
     """create a vanilla example"""
 
     env_pettingzoo = skyjo_env.env(**config)
 
     env_pettingzoo.reset()
 
-    for agent in env_pettingzoo.agent_iter(max_iter=200 * config["num_players"]):
+    for agent in env_pettingzoo.agent_iter(max_iter=300 * config["num_players"]):
         # get observation (state) for current agent:
         obs, reward, done, info = env_pettingzoo.last()
 
@@ -19,19 +19,25 @@ def simple_episode(config):
             observation = obs["observations"]
             action_mask = obs["action_mask"]
             # action given observation
-            action = random_admissible_policy(observation, action_mask)
-            print(f"{agent} : {SkyjoGame.render_action_explainer(action_int=action)}")
+            action = policy_ra(observation, action_mask)
+            if verbose:
+                print(
+                    f"{agent} : {SkyjoGame.render_action_explainer(action_int=action)}"
+                )
             # perform action
             env_pettingzoo.step(action)
             # show action
-            env_pettingzoo.render()
+            if verbose:
+                env_pettingzoo.render()
         else:
             # agent is done -> all agents are done
             env_pettingzoo.step(None)
 
             # improve policy on reward:
-            print(f"{agent} reward: {reward}")
-    print("episode done.")
+            if verbose:
+                print(f"{agent} reward: {reward}")
+    if verbose:
+        print("episode done.")
 
 
 if __name__ == "__main__":
