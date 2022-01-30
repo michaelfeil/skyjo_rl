@@ -19,39 +19,32 @@ Project Organization
 ------------
 
     ├── LICENSE
-    ├── Makefile           <- Makefile with commands like `make data` or `make train`
-    ├── README.md          <- The top-level README for developers using this project.
+    ├── Makefile                <- Makefile with commands like `make data` or `make train`
+    ├── README.md               <- The top-level README for developers using this project.
     │
-    ├── docs               <- A default Sphinx project; see sphinx-doc.org for details
+    ├── docs                    <- Docs HTMLs, see Sphinx [docs](https:/michaelfeil.github.io/skyjo_rl)
     │
-    ├── models             <- Trained and serialized models, model predictions, or model summaries
+    ├── models                  <- Trained and serialized models, model predictions, or model summaries
     │
-    ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-    │                         the creator's initials, and a short `-` delimited description, e.g.
-    │                         `1.0-jqp-initial-data-exploration`.
-    │
-    ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
-    │
-    ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-    │                         generated with `pip freeze > requirements.txt`
-    │
-    ├── setup.py           <- makes project pip installable (pip install -e .) so skyjo_rl can be imported
-    ├── skyjo_rl           <- Source code for use in this project.
-    │   ├── __init__.py    <- Makes skyjo_rl a Python module
-    │   │
-    │   ├── game       <- Scripts to turn raw data into features for modeling
-    │   │   └── build_features.py
-    │   │
-    │   ├── models         <- 
-    │   │   │                 
-    │   │   ├── predict_model.py
-    │   │   └── train_model.py
-    │   │
-    │   └── environment  
-    │       └── visualize.py
-    │
-    └── tox.ini            <- tox file with settings for running tox; see tox.readthedocs.io
-
+    ├── notebooks               <- Jupyter notebooks. 
+    ├── requirements.txt                        <- requirements for the rlskyjo
+    ├── requirements_dev.txt                    <- requirements for developers
+    ├── rlskyjo                                    
+    │   ├── environment
+    │   │   ├── skyjo_env.py
+    │   │   └── vanilla_env_example.py
+    │   ├── game
+    │   │   ├── sample_game.py
+    │   │   └── skyjo.py
+    │   ├── models
+    │   │   ├── action_mask_model.py
+    │   │   ├── random_admissible_policy.py
+    │   │   └── train_model_simple_rllib.py
+    │   └── utils.py
+    ├── setup.py                                <- makes project pip installable (pip install -e .) so skyjo_rl can be imported
+    ├── test_environment.py
+    ├── tests                                   <- Unittests
+    └── tox.ini                                 <- tox file with settings for running tox; see tox.readthedocs.io
 
 --------
 
@@ -60,6 +53,7 @@ Project Organization
 conda create --name  skyjo python=3.9
 conda activate skyjo
 pip install -r requirements.txt
+pre-commit install
 ```
 
 

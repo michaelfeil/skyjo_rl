@@ -90,3 +90,6 @@ target/
 
 # models
 /models/*
+
+# performance
+*.py.lprof
