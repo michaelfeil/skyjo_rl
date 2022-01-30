@@ -4,3 +4,4 @@ numpy==1.21.5
 PettingZoo==1.14.0
 ray==1.9.2
 setuptools==60.5.0
+pytorch>=1.8.1
