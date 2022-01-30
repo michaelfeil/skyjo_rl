@@ -1,6 +1,12 @@
 skyjo_rl
 ==============================
 
+Multi-Agent Reinforcement Learning Environment for the card game SkyJo, compatible with PettingZoo and RLLIB
+
+[![codecov](https://codecov.io/gh/johannespischinger/senti_anal/branch/dev/graph/badge.svg?token=CI49NOMH1J)](https://codecov.io/gh/michaelfeil/skyjo_rl)![CI pytest](https://codecov.io/gh/michaelfeil/skyjo_rl/actions/workflows/python_pip_unittests_lint.yml/badge.svg)
+![build-docs](https://codecov.io/gh/michaelfeil/skyjo_rl/actions/workflows/build-docs-ghpages.yml/badge.svg?branch=dev)
+
+[Read the docs](https://michaelfeil.github.io/skyjo_rl/)
 <!-- PROJECT SHIELDS -->
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
@@ -8,8 +14,6 @@ skyjo_rl
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
 [![LinkedIn][linkedin-shield]][linkedin-url]
-
-A RL repo for playing the card game 'skyjo'
 
 Project Organization
 ------------

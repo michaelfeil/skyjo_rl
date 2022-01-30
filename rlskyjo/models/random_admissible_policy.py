@@ -11,9 +11,9 @@ def policy_ra(
     """for demonstration.
     picks randomly an admissible action from the action mask"""
     if rng is None:
-        module = np
+        module = np.random
     else:
         module = rng
-    return module.random.choice(
+    return module.choice(
         np.arange(len(action_mask)), p=action_mask / np.sum(action_mask)
     )

@@ -4,6 +4,7 @@ from rlskyjo.models.train_model_simple_rllib import (
 )
 import unittest
 import ray
+import pytest
 
 class RayClassTest(unittest.TestCase):
     @classmethod
@@ -14,6 +15,7 @@ class RayClassTest(unittest.TestCase):
     def test_tune_training_loop(self):
         tune_training_loop(timesteps_total=8000)
     
+    @pytest.mark.skip
     def test_manual_training_loop(self):
         manual_training_loop(timesteps_total=8000)
         

@@ -226,6 +226,8 @@ class SimpleSkyjoEnv(AECEnv):
         """seed the environment.
          does not affect global np.random.seed()
         part of the PettingZoo API"""
+        raise NotImplementedError("Seed is currently not supported with SkyJoEnv")
+        
         if seed is not None:
             self.table.set_seed(seed)
 
