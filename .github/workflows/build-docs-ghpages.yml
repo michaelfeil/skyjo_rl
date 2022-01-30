@@ -22,7 +22,7 @@ jobs:
     - name: Checkout release branch
       uses: actions/checkout@v2
       with:
-        ref: 'refs/heads/gh-pages'
+        ref: 'refs/heads/release'
         path: 'release-dir'
     - name: Set up Python 3.9
       uses: actions/setup-python@v2
