@@ -1,5 +1,5 @@
 from numba import config
-
+config.DISABLE_JIT = True
 import pytest
 from rlskyjo.environment import skyjo_env
 from rlskyjo.models.random_admissible_policy import policy_ra
@@ -8,7 +8,7 @@ from rlskyjo.environment.vanilla_env_example import simple_episode
 import numpy as np
 
 def test_skyjo_env_options():
-    config.DISABLE_JIT = True
+    
     from itertools import product
 
     def build_config_env(
@@ -48,7 +48,7 @@ def test_skyjo_env_options():
 @pytest.mark.skip
 def test_reproducability(seed = 42, n_runs=2):
     """create a vanilla example"""
-    config.DISABLE_JIT = False
+    
     rewards = {
         i: [] for i in range(n_runs)
     }
