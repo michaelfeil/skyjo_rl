@@ -1,6 +1,8 @@
+import glob
 import os
 from typing import Tuple
 
+import ray.tune
 from ray import init
 from ray.rllib.agents import ppo
 from ray.rllib.env import PettingZooEnv
@@ -12,9 +14,9 @@ from ray.tune.registry import register_env
 from rlskyjo.environment import skyjo_env
 from rlskyjo.game.skyjo import SkyjoGame
 from rlskyjo.models.action_mask_model import TorchActionMaskModel
+from rlskyjo.utils import get_project_root
 
 torch, nn = try_import_torch()
-init(num_cpus=os.cpu_count())
 
 
 def prepare_train() -> Tuple[ppo.PPOTrainer, PettingZooEnv]:
@@ -54,7 +56,7 @@ def prepare_train() -> Tuple[ppo.PPOTrainer, PettingZooEnv]:
 
     trainer = ppo.PPOTrainer(config=ppo_config)
 
-    return trainer, env
+    return trainer, env, ppo_config
 
 
 def train(trainer, max_steps=2e6, max_iters=100):
@@ -75,6 +77,27 @@ def train(trainer, max_steps=2e6, max_iters=100):
         print(f"training done, because max_iters {max_iters} reached")
     # manual test loop
     print("Finished training. Running manual test/inference loop.")
+    return trainer
+
+
+def train_ray(ppo_config, timesteps_total: int = 10):
+    analysis = ray.tune.run(
+        ppo.PPOTrainer,
+        config=ppo_config,
+        local_dir=os.path.join(get_project_root(), "models"),
+        stop={"timesteps_total": timesteps_total},
+        checkpoint_at_end=True,
+    )
+    return analysis
+
+
+def load_ray(path, ppo_config):
+    """
+    Load a trained RLlib agent from the specified path. Call this before testing a trained agent.
+    :param path: Path pointing to the agent's saved checkpoint (only used for RLlib agents)
+    """
+    trainer = ppo.PPOTrainer(config=ppo_config)
+    trainer.restore(path)
     return trainer
 
 
@@ -110,7 +133,32 @@ def sample_trainer(trainer, env):
     print(env.env.rewards)
 
 
-if __name__ == "__main__":
-    trainer, env = prepare_train()
-    trainer_trained = train(trainer)
+def tune_training_loop(timesteps_total=10000):
+    """train trainer and sample"""
+    trainer, env, ppo_config = prepare_train()
+
+    # train trainer
+    analysis = train_ray(ppo_config, timesteps_total=timesteps_total)
+    # reload the checkpoint
+    last_chpt_path = analysis._checkpoints[-1]["local_dir"]
+    checkpoint_file = glob.glob(
+        os.path.join(last_chpt_path, "**", "checkpoint-*"), recursive=True
+    )[0]
+    trainer_trained = load_ray(checkpoint_file, ppo_config)
+
+    # sample trainer
     sample_trainer(trainer_trained, env)
+
+
+def manual_training_loop(timesteps_total=10000):
+    """train trainer and sample"""
+    
+    trainer, env, ppo_config = prepare_train()
+    trainer_trained = train(trainer, max_steps=timesteps_total)
+
+    sample_trainer(trainer_trained, env)
+
+
+if __name__ == "__main__":
+    init(local_mode=True)
+    tune_training_loop()
