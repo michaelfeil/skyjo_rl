@@ -1,19 +1,19 @@
-.. rlskyjo documentation master file, created by
-   sphinx-quickstart.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 rlskyjo documentation!
 ==============================================
 
-Contents:
+Install and overview:
 
 .. toctree::
    :maxdepth: 2
 
-   getting-started
-   commands
+   README.md
 
+Modules:
+
+.. autosummary::
+   :toctree: _autosummary
+
+   rlskyjo
 
 
 Indices and tables
