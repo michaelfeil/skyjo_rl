@@ -1,4 +1,5 @@
 from setuptools import find_packages, setup
+import rlskyjo
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
@@ -7,7 +8,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 setup(
     name="rlskyjo",
     packages=find_packages(),
-    version="0.0.1",
+    version=rlskyjo.__version__,
     description="Multi-Agent Reinforcement Learning Environment"
     " for the card game SkyJo, compatible with PettingZoo and RLLIB",
     long_description=long_description,
