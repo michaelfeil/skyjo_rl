@@ -6,6 +6,7 @@ Multi-Agent Reinforcement Learning Environment for the card game SkyJo, compatib
 [![codecov](https://codecov.io/gh/michaelfeil/skyjo_rl/branch/master/graph/badge.svg?token=56TSLUCER8)](https://codecov.io/gh/michaelfeil/skyjo_rl)![CI pytest](https://github.com/michaelfeil/skyjo_rl/actions/workflows/test_release.yml/badge.svg)
 
 [Read the docs](https://michaelfeil.github.io/skyjo_rl/)
+
 <!-- PROJECT SHIELDS -->
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
@@ -16,6 +17,7 @@ Multi-Agent Reinforcement Learning Environment for the card game SkyJo, compatib
 
 Project Organization
 ------------
+[Github Repository](https://github.com/michaelfeil/skyjo_rl)
 
     ├── LICENSE
     ├── Makefile                <- Makefile with commands like `make data` or `make train`
@@ -46,14 +48,13 @@ Project Organization
     └── tox.ini                                 <- tox file with settings for running tox; see tox.readthedocs.io
 
 --------
-
 ## PYPI Install
 ```
 conda create --name skyjo python=3.8 pip
 conda activate skyjo
 pip install rlskyjo
 ```
-
+--------
 ## Developer Install
 ```
 git clone https://github.com/michaelfeil/skyjo_rl.git
@@ -66,8 +67,12 @@ pre-commit install
 coverage run -m --source=./rlskyjo pytest tests
 ```
 
+## Tutorials
+[Vanilla SkyJo PettingZoo Env example](https://github.com/michaelfeil/skyjo_rl/blob/master/rlskyjo/environment/vanilla_env_example.py)
 
-<p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
+[SkyJo game example](https://github.com/michaelfeil/skyjo_rl/blob/master/rlskyjo/game/sample_game.py)
+
+[Train PPO MultiAgent with SkyJo PettingZoo Env, Pytorch and RLLib](https://github.com/michaelfeil/skyjo_rl/blob/master/rlskyjo/models/train_model_simple_rllib.py)
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->

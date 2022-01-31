@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rlskyjo &mdash; rlskyjo 1.0.0 documentation</title>
+  <title>rlskyjo.models &mdash; rlskyjo 1.0.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,8 +18,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="rlskyjo.environment" href="rlskyjo.environment.html" />
-    <link rel="prev" title="skyjo_rl" href="../README.html" /> 
+    <link rel="next" title="rlskyjo.models.action_mask_model" href="rlskyjo.models.action_mask_model.html" />
+    <link rel="prev" title="rlskyjo.game.skyjo" href="rlskyjo.game.skyjo.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -44,10 +44,15 @@
 <li class="toctree-l1"><a class="reference internal" href="../README.html">skyjo_rl</a></li>
 </ul>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">rlskyjo</a><ul>
+<li class="toctree-l1 current"><a class="reference internal" href="rlskyjo.html">rlskyjo</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="rlskyjo.environment.html">rlskyjo.environment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rlskyjo.game.html">rlskyjo.game</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rlskyjo.models.html">rlskyjo.models</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">rlskyjo.models</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rlskyjo.models.action_mask_model.html">rlskyjo.models.action_mask_model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rlskyjo.models.random_admissible_policy.html">rlskyjo.models.random_admissible_policy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rlskyjo.models.train_model_simple_rllib.html">rlskyjo.models.train_model_simple_rllib</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="rlskyjo.utils.html">rlskyjo.utils</a></li>
 </ul>
 </li>
@@ -67,9 +72,10 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>rlskyjo</li>
+          <li><a href="rlskyjo.html">rlskyjo</a> &raquo;</li>
+      <li>rlskyjo.models</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/_autosummary/rlskyjo.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/_autosummary/rlskyjo.models.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -77,8 +83,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-rlskyjo">
-<span id="rlskyjo"></span><h1>rlskyjo<a class="headerlink" href="#module-rlskyjo" title="Permalink to this headline"></a></h1>
+  <section id="module-rlskyjo.models">
+<span id="rlskyjo-models"></span><h1>rlskyjo.models<a class="headerlink" href="#module-rlskyjo.models" title="Permalink to this headline"></a></h1>
 <p class="rubric">Modules</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -86,16 +92,13 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="../rlskyjo.environment.html#module-rlskyjo.environment" title="rlskyjo.environment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rlskyjo.environment</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../rlskyjo.models.html#module-rlskyjo.models.action_mask_model" title="rlskyjo.models.action_mask_model"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rlskyjo.models.action_mask_model</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../rlskyjo.game.html#module-rlskyjo.game" title="rlskyjo.game"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rlskyjo.game</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../rlskyjo.models.html#module-rlskyjo.models.random_admissible_policy" title="rlskyjo.models.random_admissible_policy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rlskyjo.models.random_admissible_policy</span></code></a></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../rlskyjo.models.html#module-rlskyjo.models" title="rlskyjo.models"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rlskyjo.models</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../rlskyjo.html#module-rlskyjo.utils" title="rlskyjo.utils"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rlskyjo.utils</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../rlskyjo.models.html#module-rlskyjo.models.train_model_simple_rllib" title="rlskyjo.models.train_model_simple_rllib"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rlskyjo.models.train_model_simple_rllib</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -106,8 +109,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../README.html" class="btn btn-neutral float-left" title="skyjo_rl" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="rlskyjo.environment.html" class="btn btn-neutral float-right" title="rlskyjo.environment" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="rlskyjo.game.skyjo.html" class="btn btn-neutral float-left" title="rlskyjo.game.skyjo" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="rlskyjo.models.action_mask_model.html" class="btn btn-neutral float-right" title="rlskyjo.models.action_mask_model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

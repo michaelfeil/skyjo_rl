@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>rlskyjo.environment package &mdash; rlskyjo 0.0.3 documentation</title>
+  <title>rlskyjo.environment package &mdash; rlskyjo 1.0.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
             <a href="index.html" class="icon icon-home"> rlskyjo
           </a>
               <div class="version">
-                0.0.3
+                1.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -83,12 +83,25 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.action_space">
 <span class="sig-name descname"><span class="pre">action_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.action_space" title="Permalink to this definition"></a></dt>
-<dd><p>part of the PettingZoo API</p>
+<dd><p>part of the PettingZoo API
+action_space is Discrete(26):</p>
+<blockquote>
+<div><p>0-11: place hand card to position 0-11
+12-23: discard place hand card and reveal position 0-11
+24: pick hand card from drawpile
+25: pick hand card from discard pile</p>
+</div></blockquote>
+<dl class="simple">
+<dt>Args:</dt><dd><p>agent ([type]): [description]</p>
+</dd>
+<dt>Returns:</dt><dd><p>[type]: [description]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.close">
-<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.close" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.close" title="Permalink to this definition"></a></dt>
 <dd><p>part of the PettingZoo API</p>
 </dd></dl>
 
@@ -100,49 +113,95 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.observation_space">
 <span class="sig-name descname"><span class="pre">observation_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.observation_space" title="Permalink to this definition"></a></dt>
-<dd><p>part of the PettingZoo API</p>
+<dd><dl>
+<dt>observations are:</dt><dd><p>(1,) lowest sum of players, calculated feature
+(1,) lowest number of unmasked cards of any player,</p>
+<blockquote>
+<div><p>calculated feature</p>
+</div></blockquote>
+<dl class="simple">
+<dt>(15,) counts of cards past discard pile cards &amp; open player cards,</dt><dd><p>calculated feature</p>
+</dd>
+</dl>
+<p>(1,) top discard pile card
+(1,) current hand_card
+total: (19,)</p>
+<dl class="simple">
+<dt>if observe_other_player_indirect is True:</dt><dd><p># constant for any num_players
+(12) own cards
+total: (31,)</p>
+</dd>
+<dt>elif observe_other_player_indirect is False:</dt><dd><p>(num_players*4*3,)
+total: (19+12*num_players,)</p>
+</dd>
+</dl>
+</dd>
+<dt>Args:</dt><dd><p>agent ([type]): agent string</p>
+</dd>
+<dt>Returns:</dt><dd><p>gym.space: observation_space of agent</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.observe">
-<span class="sig-name descname"><span class="pre">observe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.observe" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">observe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.observe" title="Permalink to this definition"></a></dt>
 <dd><p>get observation and action mask from environment
-part of the PettingZoo API</p>
+part of the PettingZoo API]</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>agent ([str]): agent string</p>
+</dd>
+<dt>Returns:</dt><dd><p>dict: {“observations”: np.ndarray, “action_mask”: np.ndarray}</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.render">
-<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'human'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.render" title="Permalink to this definition"></a></dt>
-<dd><p>render board of the game</p>
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'human'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.render" title="Permalink to this definition"></a></dt>
+<dd><p>render board of the game to stdout</p>
 <p>part of the PettingZoo API</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.reset" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.reset" title="Permalink to this definition"></a></dt>
 <dd><p>reset the environment
 part of the PettingZoo API</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.seed">
-<span class="sig-name descname"><span class="pre">seed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.seed" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">seed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.seed" title="Permalink to this definition"></a></dt>
 <dd><p>seed the environment.
 does not affect global np.random.seed()
+experimental. only works with Numba installed
 part of the PettingZoo API</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>seed (int, optional): [description]. Defaults to None.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.step">
 <span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.step" title="Permalink to this definition"></a></dt>
-<dd><dl class="simple">
+<dd><p>part of the PettingZoo API</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>action (int):</dt><dd><dl class="simple">
 <dt>action is number from 0-25:</dt><dd><p>0-11: place hand card to position 0-11
 12-23: discard place hand card and reveal position 0-11
 24: pick hand card from drawpile
 25: pick hand card from discard pile</p>
 </dd>
 </dl>
-<p>part of the PettingZoo API</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>None:</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

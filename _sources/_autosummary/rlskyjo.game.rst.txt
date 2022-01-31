@@ -1,7 +1,7 @@
-﻿rlskyjo
-=======
+rlskyjo.game
+============
 
-.. automodule:: rlskyjo
+.. automodule:: rlskyjo.game
 
    
    
@@ -27,8 +27,6 @@
    :toctree:
    :recursive:
 
-   rlskyjo.environment
-   rlskyjo.game
-   rlskyjo.models
-   rlskyjo.utils
+   rlskyjo.game.sample_game
+   rlskyjo.game.skyjo
 

@@ -1,0 +1,29 @@
+rlskyjo.environment.vanilla\_env\_example
+=========================================
+
+.. automodule:: rlskyjo.environment.vanilla_env_example
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      simple_episode
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
