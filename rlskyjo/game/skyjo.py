@@ -13,7 +13,6 @@ except ImportError:
     def njit(fastmath):
         def decorator(func):
             return func
-
         return decorator
 
 
@@ -92,10 +91,7 @@ class SkyjoGame(object):
     @njit()
     def _set_seed_njit(value: int):
         """set seed for numba"""
-        try:
-            []  # fails in numba
-        except Exception:
-            np.random.seed(value)
+        np.random.seed(value)
 
     @staticmethod
     @njit(fastmath=True)
@@ -505,7 +501,7 @@ class SkyjoGame(object):
         return self.game_metrics
 
     def get_expected_action(self):
-        return self.expected_action
+        return self.expected_action.copy()
 
     # [start: render utils]
 
@@ -607,8 +603,3 @@ class SkyjoGame(object):
 
     # [end: render utils]
 
-
-if __name__ == "__main__":
-    game = SkyjoGame(2)._testrun()
-
-# print(timeit.timeit('test_game(game)', globals=globals(), number=1000))

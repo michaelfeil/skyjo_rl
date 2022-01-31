@@ -235,8 +235,6 @@ class SimpleSkyjoEnv(AECEnv):
         does not affect global np.random.seed()
         part of the PettingZoo API
         """
-        raise NotImplementedError("Seed is currently not supported with SkyJoEnv")
-
         if seed is not None:
             self.table.set_seed(seed)
 
@@ -272,7 +270,7 @@ class SimpleSkyjoEnv(AECEnv):
 
     def _expected_agentname_and_action(self):
         """implemented, get next player name for action from skyjo"""
-        a = self.table.expected_action
+        a = self.table.get_expected_action()
         return f"player_{a[0]}", a[1]
 
     # end utils

@@ -1,10 +1,9 @@
 import unittest
+
 import ray
 
-from rlskyjo.models.train_model_simple_rllib import (
-    manual_training_loop,
-    tune_training_loop,
-)
+from rlskyjo.models.train_model_simple_rllib import (manual_training_loop,
+                                                     tune_training_loop)
 
 
 class RayClassTest(unittest.TestCase):

@@ -3,19 +3,6 @@ import timeit
 from rlskyjo.game.sample_game import sample_run
 from rlskyjo.game.skyjo import SkyjoGame
 
-# class SkyjoGameNoJIT(unittest.TestCase):
-#     @classmethod
-#     def setUpClass(cls):
-#         # Start it once for the entire test suite/module
-#         numba.config.DISABLE_JIT =  False
-
-#     def test_sample_game():
-#         sample_run(games=1, verbose=1, config={"num_players": 3})
-
-#     @classmethod
-#     def tearDownClass(cls):
-#         numba.config.DISABLE_JIT =  False
-
 
 def test_sample_game():
     sample_run(games=1, verbose=1, config={"num_players": 3})
