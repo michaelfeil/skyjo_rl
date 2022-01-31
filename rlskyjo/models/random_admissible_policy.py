@@ -9,7 +9,16 @@ def policy_ra(
     rng: Union[None, np.random.Generator] = None,
 ) -> int:
     """for demonstration.
-    picks randomly an admissible action from the action mask"""
+    picks randomly an admissible action from the action mask
+
+    Args:
+        observation (np.array): [description]
+        action_mask (np.array): [description]
+        rng (Union[None, np.random.Generator], optional): [description]. Defaults to None.
+
+    Returns:
+        int: [description]
+    """     
     if rng is None:
         module = np.random
     else:
