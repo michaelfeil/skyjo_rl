@@ -1,9 +1,13 @@
 from setuptools import find_packages, setup
-import rlskyjo
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath("__file__")))
+import rlskyjo
 
 setup(
     name="rlskyjo",
