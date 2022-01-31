@@ -28,4 +28,15 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: POSIX :: Linux",
     ],
+    python_requires=">=3.6",
+    install_requires=[
+        "gym",
+        "numba",
+        "numpy",
+        "PettingZoo",
+        "ray[tune]",
+        "ray[rllib]",
+        "setuptools",
+        "torch",
+    ],
 )
