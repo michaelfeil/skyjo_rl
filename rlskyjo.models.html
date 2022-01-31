@@ -24,6 +24,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">rlskyjo 0.1 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">rlskyjo.models package</a></li> 
       </ul>
@@ -39,17 +42,130 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </section>
-<section id="rlskyjo-models-action-mask-model-module">
-<h2>rlskyjo.models.action_mask_model module<a class="headerlink" href="#rlskyjo-models-action-mask-model-module" title="Permalink to this headline">¶</a></h2>
+<section id="module-rlskyjo.models.action_mask_model">
+<span id="rlskyjo-models-action-mask-model-module"></span><h2>rlskyjo.models.action_mask_model module<a class="headerlink" href="#module-rlskyjo.models.action_mask_model" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="rlskyjo.models.action_mask_model.TorchActionMaskModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rlskyjo.models.action_mask_model.</span></span><span class="sig-name descname"><span class="pre">TorchActionMaskModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs_space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.models.action_mask_model.TorchActionMaskModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ray.rllib.models.torch.torch_modelv2.TorchModelV2</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>PyTorch version</p>
+<p>Model that handles simple discrete action masking.
+This assumes the outputs are logits for a single Categorical action dist.
+Getting this to work with a more complex output (e.g., if the action space
+is a tuple of several distributions) is also possible but left as an
+exercise to the reader.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="rlskyjo.models.action_mask_model.TorchActionMaskModel.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seq_lens</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.models.action_mask_model.TorchActionMaskModel.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call the model with the given input tensors and state.</p>
+<p>Any complex observations (dicts, tuples, etc.) will be unpacked by
+__call__ before being passed to forward(). To access the flattened
+observation tensor, refer to input_dict[“obs_flat”].</p>
+<p>This method can be called any number of times. In eager execution,
+each call to forward() will eagerly evaluate the model. In symbolic
+execution, each call to forward creates a computation graph that
+operates over the variables of this model (i.e., shares weights).</p>
+<p>Custom models should override this instead of __call__.</p>
+<dl>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>input_dict (dict): dictionary of input tensors, including “obs”,</dt><dd><p>“obs_flat”, “prev_action”, “prev_reward”, “is_training”,
+“eps_id”, “agent_id”, “infos”, and “t”.</p>
+</dd>
+<dt>state (list): list of state tensors with sizes matching those</dt><dd><p>returned by get_initial_state + the batch dimension</p>
+</dd>
+</dl>
+<p>seq_lens (Tensor): 1d tensor holding input sequence lengths</p>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>(outputs, state): The model output tensor of size</dt><dd><p>[BATCH, num_outputs], and the new RNN state.</p>
+</dd>
+</dl>
+</dd>
+<dt>Examples:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_dict</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">seq_lens</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">model_out</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value_out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_model</span><span class="p">(</span>
+<span class="gp">... </span>        <span class="n">input_dict</span><span class="p">[</span><span class="s2">&quot;obs&quot;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">return</span> <span class="n">model_out</span><span class="p">,</span> <span class="n">state</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rlskyjo.models.action_mask_model.TorchActionMaskModel.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#rlskyjo.models.action_mask_model.TorchActionMaskModel.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rlskyjo.models.action_mask_model.TorchActionMaskModel.value_function">
+<span class="sig-name descname"><span class="pre">value_function</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.models.action_mask_model.TorchActionMaskModel.value_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the value function output for the most recent forward pass.</p>
+<p>Note that a <cite>forward</cite> call has to be performed first, before this
+methods can return anything and thus that calling this method does not
+cause an extra forward pass through the network.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>value estimate tensor of shape [BATCH].</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="rlskyjo-models-random-admissible-policy-module">
-<h2>rlskyjo.models.random_admissible_policy module<a class="headerlink" href="#rlskyjo-models-random-admissible-policy-module" title="Permalink to this headline">¶</a></h2>
+<section id="module-rlskyjo.models.random_admissible_policy">
+<span id="rlskyjo-models-random-admissible-policy-module"></span><h2>rlskyjo.models.random_admissible_policy module<a class="headerlink" href="#module-rlskyjo.models.random_admissible_policy" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="rlskyjo.models.random_admissible_policy.policy_ra">
+<span class="sig-prename descclassname"><span class="pre">rlskyjo.models.random_admissible_policy.</span></span><span class="sig-name descname"><span class="pre">policy_ra</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">observation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_mask</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.random._generator.Generator</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#rlskyjo.models.random_admissible_policy.policy_ra" title="Permalink to this definition">¶</a></dt>
+<dd><p>for demonstration.
+picks randomly an admissible action from the action mask</p>
+</dd></dl>
+
 </section>
-<section id="rlskyjo-models-train-model-simple-rllib-module">
-<h2>rlskyjo.models.train_model_simple_rllib module<a class="headerlink" href="#rlskyjo-models-train-model-simple-rllib-module" title="Permalink to this headline">¶</a></h2>
+<section id="module-rlskyjo.models.train_model_simple_rllib">
+<span id="rlskyjo-models-train-model-simple-rllib-module"></span><h2>rlskyjo.models.train_model_simple_rllib module<a class="headerlink" href="#module-rlskyjo.models.train_model_simple_rllib" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="rlskyjo.models.train_model_simple_rllib.load_ray">
+<span class="sig-prename descclassname"><span class="pre">rlskyjo.models.train_model_simple_rllib.</span></span><span class="sig-name descname"><span class="pre">load_ray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ppo_config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.models.train_model_simple_rllib.load_ray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a trained RLlib agent from the specified path. Call this before testing a trained agent.
+:param path: Path pointing to the agent’s saved checkpoint (only used for RLlib agents)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rlskyjo.models.train_model_simple_rllib.manual_training_loop">
+<span class="sig-prename descclassname"><span class="pre">rlskyjo.models.train_model_simple_rllib.</span></span><span class="sig-name descname"><span class="pre">manual_training_loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timesteps_total</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.models.train_model_simple_rllib.manual_training_loop" title="Permalink to this definition">¶</a></dt>
+<dd><p>train trainer and sample</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rlskyjo.models.train_model_simple_rllib.prepare_train">
+<span class="sig-prename descclassname"><span class="pre">rlskyjo.models.train_model_simple_rllib.</span></span><span class="sig-name descname"><span class="pre">prepare_train</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ray.rllib.agents.trainer_template.PPO</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ray.rllib.env.wrappers.pettingzoo_env.PettingZooEnv</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#rlskyjo.models.train_model_simple_rllib.prepare_train" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rlskyjo.models.train_model_simple_rllib.sample_trainer">
+<span class="sig-prename descclassname"><span class="pre">rlskyjo.models.train_model_simple_rllib.</span></span><span class="sig-name descname"><span class="pre">sample_trainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.models.train_model_simple_rllib.sample_trainer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rlskyjo.models.train_model_simple_rllib.train">
+<span class="sig-prename descclassname"><span class="pre">rlskyjo.models.train_model_simple_rllib.</span></span><span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2000000.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.models.train_model_simple_rllib.train" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rlskyjo.models.train_model_simple_rllib.train_ray">
+<span class="sig-prename descclassname"><span class="pre">rlskyjo.models.train_model_simple_rllib.</span></span><span class="sig-name descname"><span class="pre">train_ray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ppo_config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timesteps_total</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.models.train_model_simple_rllib.train_ray" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rlskyjo.models.train_model_simple_rllib.tune_training_loop">
+<span class="sig-prename descclassname"><span class="pre">rlskyjo.models.train_model_simple_rllib.</span></span><span class="sig-name descname"><span class="pre">tune_training_loop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timesteps_total</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.models.train_model_simple_rllib.tune_training_loop" title="Permalink to this definition">¶</a></dt>
+<dd><p>train trainer and sample</p>
+</dd></dl>
+
 </section>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<section id="module-rlskyjo.models">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-rlskyjo.models" title="Permalink to this headline">¶</a></h2>
 </section>
 </section>
 
@@ -64,10 +180,10 @@
   <ul>
 <li><a class="reference internal" href="#">rlskyjo.models package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#rlskyjo-models-action-mask-model-module">rlskyjo.models.action_mask_model module</a></li>
-<li><a class="reference internal" href="#rlskyjo-models-random-admissible-policy-module">rlskyjo.models.random_admissible_policy module</a></li>
-<li><a class="reference internal" href="#rlskyjo-models-train-model-simple-rllib-module">rlskyjo.models.train_model_simple_rllib module</a></li>
-<li><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li><a class="reference internal" href="#module-rlskyjo.models.action_mask_model">rlskyjo.models.action_mask_model module</a></li>
+<li><a class="reference internal" href="#module-rlskyjo.models.random_admissible_policy">rlskyjo.models.random_admissible_policy module</a></li>
+<li><a class="reference internal" href="#module-rlskyjo.models.train_model_simple_rllib">rlskyjo.models.train_model_simple_rllib module</a></li>
+<li><a class="reference internal" href="#module-rlskyjo.models">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -99,6 +215,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">rlskyjo 0.1 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">rlskyjo.models package</a></li> 
       </ul>

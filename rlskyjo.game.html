@@ -24,6 +24,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">rlskyjo 0.1 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">rlskyjo.game package</a></li> 
       </ul>
@@ -39,14 +42,85 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </section>
-<section id="rlskyjo-game-sample-game-module">
-<h2>rlskyjo.game.sample_game module<a class="headerlink" href="#rlskyjo-game-sample-game-module" title="Permalink to this headline">¶</a></h2>
+<section id="module-rlskyjo.game.sample_game">
+<span id="rlskyjo-game-sample-game-module"></span><h2>rlskyjo.game.sample_game module<a class="headerlink" href="#module-rlskyjo.game.sample_game" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="rlskyjo.game.sample_game.sample_run">
+<span class="sig-prename descclassname"><span class="pre">rlskyjo.game.sample_game.</span></span><span class="sig-name descname"><span class="pre">sample_run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">games</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'num_players':</span> <span class="pre">2}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.game.sample_game.sample_run" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </section>
-<section id="rlskyjo-game-skyjo-module">
-<h2>rlskyjo.game.skyjo module<a class="headerlink" href="#rlskyjo-game-skyjo-module" title="Permalink to this headline">¶</a></h2>
+<section id="module-rlskyjo.game.skyjo">
+<span id="rlskyjo-game-skyjo-module"></span><h2>rlskyjo.game.skyjo module<a class="headerlink" href="#module-rlskyjo.game.skyjo" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="rlskyjo.game.skyjo.SkyjoGame">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rlskyjo.game.skyjo.</span></span><span class="sig-name descname"><span class="pre">SkyjoGame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_players</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">score_penalty</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">observe_other_player_indirect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.game.skyjo.SkyjoGame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="rlskyjo.game.skyjo.SkyjoGame.act">
+<span class="sig-name descname"><span class="pre">act</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">player_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_int</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.game.skyjo.SkyjoGame.act" title="Permalink to this definition">¶</a></dt>
+<dd><p>perform actions</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rlskyjo.game.skyjo.SkyjoGame.collect_observation">
+<span class="sig-name descname"><span class="pre">collect_observation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">player_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.array</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.array</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#rlskyjo.game.skyjo.SkyjoGame.collect_observation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rlskyjo.game.skyjo.SkyjoGame.get_expected_action">
+<span class="sig-name descname"><span class="pre">get_expected_action</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.game.skyjo.SkyjoGame.get_expected_action" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rlskyjo.game.skyjo.SkyjoGame.get_game_metrics">
+<span class="sig-name descname"><span class="pre">get_game_metrics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.game.skyjo.SkyjoGame.get_game_metrics" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rlskyjo.game.skyjo.SkyjoGame.render_action_explainer">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">render_action_explainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action_int</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.game.skyjo.SkyjoGame.render_action_explainer" title="Permalink to this definition">¶</a></dt>
+<dd><p>adds a string explaining actions to plot of render_player</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rlskyjo.game.skyjo.SkyjoGame.render_actions">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">render_actions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.game.skyjo.SkyjoGame.render_actions" title="Permalink to this definition">¶</a></dt>
+<dd><p>possible actions</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rlskyjo.game.skyjo.SkyjoGame.render_player">
+<span class="sig-name descname"><span class="pre">render_player</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">player_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">render_cards_open</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.game.skyjo.SkyjoGame.render_player" title="Permalink to this definition">¶</a></dt>
+<dd><p>render cards of 1 player</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rlskyjo.game.skyjo.SkyjoGame.render_table">
+<span class="sig-name descname"><span class="pre">render_table</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.game.skyjo.SkyjoGame.render_table" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>render game:</dt><dd><p>render cards for all players
+render game statistics</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rlskyjo.game.skyjo.SkyjoGame.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.game.skyjo.SkyjoGame.reset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rlskyjo.game.skyjo.SkyjoGame.set_seed">
+<span class="sig-name descname"><span class="pre">set_seed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.game.skyjo.SkyjoGame.set_seed" title="Permalink to this definition">¶</a></dt>
+<dd><p>adds a random number generator. does not affect global np.random.seed()</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<section id="module-rlskyjo.game">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-rlskyjo.game" title="Permalink to this headline">¶</a></h2>
 </section>
 </section>
 
@@ -61,9 +135,9 @@
   <ul>
 <li><a class="reference internal" href="#">rlskyjo.game package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#rlskyjo-game-sample-game-module">rlskyjo.game.sample_game module</a></li>
-<li><a class="reference internal" href="#rlskyjo-game-skyjo-module">rlskyjo.game.skyjo module</a></li>
-<li><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li><a class="reference internal" href="#module-rlskyjo.game.sample_game">rlskyjo.game.sample_game module</a></li>
+<li><a class="reference internal" href="#module-rlskyjo.game.skyjo">rlskyjo.game.skyjo module</a></li>
+<li><a class="reference internal" href="#module-rlskyjo.game">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -95,6 +169,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">rlskyjo 0.1 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">rlskyjo.game package</a></li> 
       </ul>

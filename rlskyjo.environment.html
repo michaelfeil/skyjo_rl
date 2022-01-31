@@ -24,6 +24,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">rlskyjo 0.1 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">rlskyjo.environment package</a></li> 
       </ul>
@@ -39,14 +42,99 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </section>
-<section id="rlskyjo-environment-skyjo-env-module">
-<h2>rlskyjo.environment.skyjo_env module<a class="headerlink" href="#rlskyjo-environment-skyjo-env-module" title="Permalink to this headline">¶</a></h2>
+<section id="module-rlskyjo.environment.skyjo_env">
+<span id="rlskyjo-environment-skyjo-env-module"></span><h2>rlskyjo.environment.skyjo_env module<a class="headerlink" href="#module-rlskyjo.environment.skyjo_env" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="rlskyjo.environment.skyjo_env.SimpleSkyjoEnv">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rlskyjo.environment.skyjo_env.</span></span><span class="sig-name descname"><span class="pre">SimpleSkyjoEnv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_players</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">score_penalty</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">observe_other_player_indirect</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_reward</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reward_refunded</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.environment.skyjo_env.SimpleSkyjoEnv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pettingzoo.utils.env.AECEnv</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.action_space">
+<span class="sig-name descname"><span class="pre">action_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.action_space" title="Permalink to this definition">¶</a></dt>
+<dd><p>part of the PettingZoo API</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>part of the PettingZoo API</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.metadata">
+<span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'is_parallelizable':</span> <span class="pre">False,</span> <span class="pre">'name':</span> <span class="pre">'skyjo',</span> <span class="pre">'render.modes':</span> <span class="pre">['human'],</span> <span class="pre">'video.frames_per_second':</span> <span class="pre">1}</span></em><a class="headerlink" href="#rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.metadata" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.observation_space">
+<span class="sig-name descname"><span class="pre">observation_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.observation_space" title="Permalink to this definition">¶</a></dt>
+<dd><p>part of the PettingZoo API</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.observe">
+<span class="sig-name descname"><span class="pre">observe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="headerlink" href="#rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.observe" title="Permalink to this definition">¶</a></dt>
+<dd><p>get observation and action mask from environment
+part of the PettingZoo API</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'human'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.render" title="Permalink to this definition">¶</a></dt>
+<dd><p>render board of the game</p>
+<p>part of the PettingZoo API</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>reset the environment
+part of the PettingZoo API</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.seed">
+<span class="sig-name descname"><span class="pre">seed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.seed" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>seed the environment.</dt><dd><p>does not affect global np.random.seed()</p>
+</dd>
+</dl>
+<p>part of the PettingZoo API</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#rlskyjo.environment.skyjo_env.SimpleSkyjoEnv.step" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>action is number from 0-25:</dt><dd><p>0-11: place hand card to position 0-11
+12-23: discard place hand card and reveal position 0-11
+24: pick hand card from drawpile
+25: pick hand card from discard pile</p>
+</dd>
+</dl>
+<p>part of the PettingZoo API</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rlskyjo.environment.skyjo_env.env">
+<span class="sig-prename descclassname"><span class="pre">rlskyjo.environment.skyjo_env.</span></span><span class="sig-name descname"><span class="pre">env</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.environment.skyjo_env.env" title="Permalink to this definition">¶</a></dt>
+<dd><p>wrap SkyJoEnv in</p>
+</dd></dl>
+
 </section>
-<section id="rlskyjo-environment-vanilla-env-example-module">
-<h2>rlskyjo.environment.vanilla_env_example module<a class="headerlink" href="#rlskyjo-environment-vanilla-env-example-module" title="Permalink to this headline">¶</a></h2>
+<section id="module-rlskyjo.environment.vanilla_env_example">
+<span id="rlskyjo-environment-vanilla-env-example-module"></span><h2>rlskyjo.environment.vanilla_env_example module<a class="headerlink" href="#module-rlskyjo.environment.vanilla_env_example" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="rlskyjo.environment.vanilla_env_example.simple_episode">
+<span class="sig-prename descclassname"><span class="pre">rlskyjo.environment.vanilla_env_example.</span></span><span class="sig-name descname"><span class="pre">simple_episode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rlskyjo.environment.vanilla_env_example.simple_episode" title="Permalink to this definition">¶</a></dt>
+<dd><p>create a vanilla example</p>
+</dd></dl>
+
 </section>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<section id="module-rlskyjo.environment">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-rlskyjo.environment" title="Permalink to this headline">¶</a></h2>
 </section>
 </section>
 
@@ -61,9 +149,9 @@
   <ul>
 <li><a class="reference internal" href="#">rlskyjo.environment package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#rlskyjo-environment-skyjo-env-module">rlskyjo.environment.skyjo_env module</a></li>
-<li><a class="reference internal" href="#rlskyjo-environment-vanilla-env-example-module">rlskyjo.environment.vanilla_env_example module</a></li>
-<li><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li><a class="reference internal" href="#module-rlskyjo.environment.skyjo_env">rlskyjo.environment.skyjo_env module</a></li>
+<li><a class="reference internal" href="#module-rlskyjo.environment.vanilla_env_example">rlskyjo.environment.vanilla_env_example module</a></li>
+<li><a class="reference internal" href="#module-rlskyjo.environment">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -95,6 +183,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">rlskyjo 0.1 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">rlskyjo.environment package</a></li> 
       </ul>
