@@ -93,3 +93,4 @@ target/
 
 # performance
 *.py.lprof
+docs/_autosummary/*
