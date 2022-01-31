@@ -42,5 +42,4 @@ def simple_episode(config, verbose=0):
 
 
 if __name__ == "__main__":
-   
     simple_episode(config=skyjo_env.DEFAULT_CONFIG)
