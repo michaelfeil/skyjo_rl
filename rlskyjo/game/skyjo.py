@@ -75,8 +75,8 @@ class SkyjoGame(object):
         assert self.expected_action[1] == self._name_draw, "expect to draw after reset"
 
     @staticmethod
-    @njit
-    def _new_drawpile(card_dtype):
+    @njit()
+    def _new_drawpile(card_dtype=np.int8):
         """create a drawpile len(150) and cards from -2 to 12"""
         drawpile = np.repeat(np.arange(-2, 13, dtype=card_dtype), 10)
         np.random.shuffle(drawpile)
@@ -89,8 +89,8 @@ class SkyjoGame(object):
         self.reset()
 
     @staticmethod
-    @njit
-    def _set_seed_njit(value):
+    @njit()
+    def _set_seed_njit(value: int):
         """set seed for numba"""
         try:
             []  # fails in numba
