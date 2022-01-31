@@ -1,5 +1,6 @@
-import numba
+from numba import config
 
+config.DISABLE_JIT = True
 import numpy as np
 import pytest
 import unittest
@@ -11,14 +12,13 @@ from rlskyjo.models.random_admissible_policy import policy_ra
 from itertools import product
 
 
-class RayClassTest(unittest.TestCase):
+class SkyJoJITenv(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         # Start it once for the entire test suite/module
-        # numba.config.DISABLE_JIT =  True
-        pass
+        config.DISABLE_JIT = True
 
-    def test_skyjo_env_options(self):
+    def test_skyjoev(self):
         def build_config_env(
             num_players,
             score_penalty,
@@ -55,14 +55,14 @@ class RayClassTest(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        pass
-        # numba.config.DISABLE_JIT =  False
+
+        config.DISABLE_JIT = False
 
 
 @pytest.mark.skip
 def test_reproducability(seed=42, n_runs=2):
     """create a vanilla example"""
-    numba.config.DISABLE_JIT = False
+
     rewards = {i: [] for i in range(n_runs)}
     observations = {i: [] for i in range(n_runs)}
     config_env = DEFAULT_CONFIG

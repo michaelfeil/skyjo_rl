@@ -49,7 +49,7 @@ Project Organization
 
 ## PYPI Install
 ```
-conda create --name skyjo python=3.8
+conda create --name skyjo python=3.8 pip
 conda activate skyjo
 pip install rlskyjo
 ```
@@ -57,12 +57,13 @@ pip install rlskyjo
 ## Developer Install
 ```
 git clone https://github.com/michaelfeil/skyjo_rl.git
-conda create --name skyjo python=3.8
+conda create --name skyjo python=3.8 pip
 conda activate skyjo
 pip install -r requirements.txt
 pip install -r requirements_dev.txt
 pip install -e .
 pre-commit install
+coverage run -m --source=./rlskyjo pytest tests
 ```
 
 
