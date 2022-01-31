@@ -1,4 +1,4 @@
-name: Python3.9 pytest
+name: Python pytest
 # do not change name
 on: 
   push:
@@ -8,19 +8,22 @@ on:
   pull-request:
     - master
     - dev
+  release: [edited, created]
     
 jobs:
   build-linux:
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 5
+      fail-fast: false
+      matrix:
+        python: ['3.8', '3.9']
 
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python 3.9
       uses: actions/setup-python@v2
       with:
-        python-version: 3.9
+        python-version: ${{ matrix.python }}
         cache: 'pip'
         cache-dependency-path: '**/requirements*.txt'
         
@@ -49,5 +52,6 @@ jobs:
       run: |
         coverage run -m --source=./rlskyjo pytest tests 
         coverage xml
-    - name: Upload coverage to Codecov
+    - name: Upload coverage to Codecov for python 3.9
+      if: ${{ matrix.python == '3.9' }}
       uses: codecov/codecov-action@v2
