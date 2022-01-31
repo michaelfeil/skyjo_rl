@@ -18,7 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: ['3.8', '3.9']
+        python: ['3.6','3.7','3.8', '3.9']
 
     steps:
     - uses: actions/checkout@v2
@@ -55,8 +55,8 @@ jobs:
       run: |
         coverage run -m --source=./rlskyjo pytest tests 
         coverage xml
-    - name: Upload coverage to Codecov for python 3.9
-      if: ${{ matrix.python == '3.9' }}
+    - name: Upload coverage to Codecov for python 3.8
+      if: ${{ matrix.python == '3.8' }}
       uses: codecov/codecov-action@v2
 
   deploy_docs:
@@ -76,10 +76,10 @@ jobs:
         ref: 'refs/heads/gh-pages'
         path: 'gh-pages-dir'
 
-    - name: Set up Python 3.9
+    - name: Set up Python 3.8
       uses: actions/setup-python@v2
       with:
-        python-version: 3.9
+        python-version: 3.8
         cache: 'pip'
         cache-dependency-path: '**/requirements*.txt'
 
@@ -130,10 +130,10 @@ jobs:
     name: Build and publish Python 🐍 distributions 📦 to PyPI
     steps:
     - uses: actions/checkout@master
-    - name: Set up Python 3.9
+    - name: Set up Python 3.8
       uses: actions/setup-python@v1
       with:
-        python-version: 3.9
+        python-version: 3.8
     
     - name: Install pypa/build
       run: |
