@@ -1,3 +1,5 @@
+from numba import config
+config.DISABLE_JIT = True
 import numpy as np
 
 from rlskyjo.environment import skyjo_env
