@@ -66,8 +66,12 @@ pre-commit install
 coverage run -m --source=./rlskyjo pytest tests
 ```
 
+## Tutorials
+[Vanilla SkyJo PettingZoo Env example](https://github.com/michaelfeil/skyjo_rl/blob/master/rlskyjo/environment/vanilla_env_example.py)
 
-<p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
+[SkyJo game example](https://github.com/michaelfeil/skyjo_rl/blob/master/rlskyjo/game/sample_game.py)
+
+[Train PPO MultiAgent with SkyJo PettingZoo Env, Pytorch and RLLib](https://github.com/michaelfeil/skyjo_rl/blob/master/rlskyjo/models/train_model_simple_rllib.py)
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
