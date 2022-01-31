@@ -1,23 +1,6 @@
 ﻿rlskyjo
 =======
 
+.. currentmodule:: rlskyjo
+
 .. automodule:: rlskyjo
-
-   
-   
-   
-
-   
-   
-   
-
-   
-   
-   
-
-   
-   
-   
-
-
-
