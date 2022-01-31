@@ -6,6 +6,7 @@ Multi-Agent Reinforcement Learning Environment for the card game SkyJo, compatib
 [![codecov](https://codecov.io/gh/michaelfeil/skyjo_rl/branch/master/graph/badge.svg?token=56TSLUCER8)](https://codecov.io/gh/michaelfeil/skyjo_rl)![CI pytest](https://github.com/michaelfeil/skyjo_rl/actions/workflows/test_release.yml/badge.svg)
 
 [Read the docs](https://michaelfeil.github.io/skyjo_rl/)
+
 <!-- PROJECT SHIELDS -->
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
@@ -16,6 +17,7 @@ Multi-Agent Reinforcement Learning Environment for the card game SkyJo, compatib
 
 Project Organization
 ------------
+[Github Repository](https://github.com/michaelfeil/skyjo_rl)
 
     ├── LICENSE
     ├── Makefile                <- Makefile with commands like `make data` or `make train`
@@ -46,14 +48,13 @@ Project Organization
     └── tox.ini                                 <- tox file with settings for running tox; see tox.readthedocs.io
 
 --------
-
 ## PYPI Install
 ```
 conda create --name skyjo python=3.8 pip
 conda activate skyjo
 pip install rlskyjo
 ```
-
+--------
 ## Developer Install
 ```
 git clone https://github.com/michaelfeil/skyjo_rl.git
