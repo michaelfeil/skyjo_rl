@@ -55,21 +55,26 @@ class SimpleSkyjoEnv(AECEnv):
             # observation space configuration
             observe_other_player_indirect: bool
                 True: observation space is:
-                    game statistics (pile +  player cards): + own 12 player cards
+                    game statistics (pile +  player cards):
+                    + own 12 player cards
                 False: observation space is:
-                    game statistics (excluding player cards)+ player cards of every player
+                    game statistics (excluding player cards)
+                    + player cards of every player
 
             # rewards
             mean_reward: float, default: 1.0
                 mean reward at the end of an game
-                recommended to be > 0, e.g. Environments (like RLLib) are positive sum games
+                recommended to be > 0, e.g. Environments (like RLLib)
+                are positive sum games
             reward_refunded: float, default: 0.0
-                adds an additional reward to learn the concept of refunding cards in skyjo
+                adds an additional reward to learn the concept
+                of refunding cards in skyjo
 
         observation space is DictSpace:
             observations:
                 (1,) lowest sum of players, calculated feature
-                (1,) lowest number of unmasked cards of any player, calculated feature
+                (1,) lowest number of unmasked cards of any player,
+                    calculated feature
                 (15,) counts of cards past discard pile cards & open player cards,
                     calculated feature
                 (1,) top discard pile card
@@ -199,8 +204,10 @@ class SimpleSkyjoEnv(AECEnv):
         self._dones_step_first()
 
     def reset(self):
-        """reset the environment
-        part of the PettingZoo API"""
+        """
+        reset the environment
+        part of the PettingZoo API
+        """
         self.table.reset()
         self.agents = self.possible_agents[:]
         self.agent_selection = self._expected_agentname_and_action()[0]
@@ -223,9 +230,11 @@ class SimpleSkyjoEnv(AECEnv):
         pass
 
     def seed(self, seed=None):
-        """seed the environment.
-         does not affect global np.random.seed()
-        part of the PettingZoo API"""
+        """
+        seed the environment.
+        does not affect global np.random.seed()
+        part of the PettingZoo API
+        """
         raise NotImplementedError("Seed is currently not supported with SkyJoEnv")
 
         if seed is not None:
@@ -262,7 +271,7 @@ class SimpleSkyjoEnv(AECEnv):
         return dict(zip(self.possible_agents, list_of_list))
 
     def _expected_agentname_and_action(self):
-        """not part of the api, implemented, get next player name for action from skyjo"""
+        """implemented, get next player name for action from skyjo"""
         a = self.table.expected_action
         return f"player_{a[0]}", a[1]
 

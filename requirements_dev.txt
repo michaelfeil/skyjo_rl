@@ -5,3 +5,5 @@ Sphinx~=4.3.2
 coverage~=6.2
 flake8
 pre-commit
+myst-parser[sphinx]
+mkdocs

@@ -2,6 +2,7 @@ from rlskyjo.environment import skyjo_env
 from rlskyjo.game.skyjo import SkyjoGame
 from rlskyjo.models.random_admissible_policy import policy_ra
 
+
 def simple_episode(config, verbose=0):
     """create a vanilla example"""
 

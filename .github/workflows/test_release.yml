@@ -47,6 +47,7 @@ jobs:
       # makefile: make html build the the docs/_build/html/
       run: |
         sphinx-apidoc -o ./docs ./rlskyjo
+        cp README.md ./docs
         cd docs
         make html
 
@@ -94,6 +95,7 @@ jobs:
       run: |
         cd branch-dir
         sphinx-apidoc -o ./docs ./rlskyjo
+        cp README.md ./docs
         cd docs
         make html
     
