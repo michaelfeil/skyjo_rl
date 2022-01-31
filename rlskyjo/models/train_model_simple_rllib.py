@@ -69,7 +69,8 @@ def train(trainer, max_steps=2e6):
         # stop training if the target train steps or reward are reached
         if result["timesteps_total"] >= max_steps:
             print(
-                f"training done, because max_steps {max_steps} {result['timesteps_total']} reached"
+                "training done, because max_steps"
+                f"{max_steps} {result['timesteps_total']} reached"
             )
             break
     # manual test loop
@@ -89,8 +90,12 @@ def train_ray(ppo_config, timesteps_total: int = 10):
 
 def load_ray(path, ppo_config):
     """
-    Load a trained RLlib agent from the specified path. Call this before testing a trained agent.
-    :param path: Path pointing to the agent's saved checkpoint (only used for RLlib agents)
+    Load a trained RLlib agent from the specified path.
+    Call this before testing a trained agent.
+    :param path:
+        Path pointing to the agent's saved checkpoint (only used for RLlib agents)
+    :param ppo_config:
+        dict config
     """
     trainer = ppo.PPOTrainer(config=ppo_config)
     trainer.restore(path)

@@ -1,6 +1,5 @@
 import unittest
 
-import pytest
 import ray
 
 from rlskyjo.models.train_model_simple_rllib import (manual_training_loop,

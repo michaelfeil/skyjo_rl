@@ -2,9 +2,11 @@ from rlskyjo.environment import skyjo_env
 from rlskyjo.game.skyjo import SkyjoGame
 from rlskyjo.models.random_admissible_policy import policy_ra
 
+
 def simple_episode(config, verbose=0):
     """create a vanilla example"""
-
+    if verbose:
+        print(f"running with config: {config}")
     env_pettingzoo = skyjo_env.env(**config)
 
     env_pettingzoo.reset()
@@ -40,5 +42,4 @@ def simple_episode(config, verbose=0):
 
 
 if __name__ == "__main__":
-    print(f"running with config: {skyjo_env.DEFAULT_CONFIG}")
     simple_episode(config=skyjo_env.DEFAULT_CONFIG)

@@ -90,3 +90,7 @@ target/
 
 # models
 /models/*
+
+# performance
+*.py.lprof
+docs/_autosummary/*

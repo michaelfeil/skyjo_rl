@@ -1,57 +1,15 @@
 from numba import config
-
 config.DISABLE_JIT = True
 import numpy as np
-import pytest
 
 from rlskyjo.environment import skyjo_env
-from rlskyjo.environment.skyjo_env import DEFAULT_CONFIG, env
-from rlskyjo.environment.vanilla_env_example import simple_episode
+from rlskyjo.environment.skyjo_env import DEFAULT_CONFIG
 from rlskyjo.models.random_admissible_policy import policy_ra
 
 
-def test_skyjo_env_options():
-
-    from itertools import product
-
-    def build_config_env(
-        num_players,
-        score_penalty,
-        observe_other_player_indirect,
-        mean_reward,
-        reward_refunded,
-    ):
-        return {
-            "num_players": num_players,
-            "score_penalty": score_penalty,
-            "observe_other_player_indirect": observe_other_player_indirect,
-            "mean_reward": mean_reward,
-            "reward_refunded": reward_refunded,
-        }
-
-    num_players = list(range(1, 13))
-    score_penalty = [1.0, 2.0]
-    observe_other_player_indirect = [True, False]
-    mean_reward = [-1, 0.0, 1.0]
-    reward_refunded = [0.0, 0.01]
-
-    for count, options in enumerate(
-        product(
-            num_players,
-            score_penalty,
-            observe_other_player_indirect,
-            mean_reward,
-            reward_refunded,
-        )
-    ):
-        config_env = build_config_env(*options)
-        print(count, config_env)
-        simple_episode(config_env, verbose=(1 if count % 50 == 0 else 0))
-
-
-@pytest.mark.skip
-def test_reproducability(seed=42, n_runs=2):
+def test_reproducability(seed=42):
     """create a vanilla example"""
+    n_runs=2
 
     rewards = {i: [] for i in range(n_runs)}
     observations = {i: [] for i in range(n_runs)}
@@ -83,7 +41,8 @@ def test_reproducability(seed=42, n_runs=2):
                 env_pettingzoo.step(None)
                 rewards[i].append(reward)
                 # improve policy on reward:
-    print(rewards, observations)
+    np.testing.assert_array_equal(observations[0], observations[1])
+    np.testing.assert_array_equal(rewards[0], rewards[1])
 
 
 if __name__ == "__main__":

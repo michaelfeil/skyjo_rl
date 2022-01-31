@@ -13,7 +13,6 @@ except ImportError:
     def njit(fastmath):
         def decorator(func):
             return func
-
         return decorator
 
 
@@ -75,8 +74,8 @@ class SkyjoGame(object):
         assert self.expected_action[1] == self._name_draw, "expect to draw after reset"
 
     @staticmethod
-    @njit
-    def _new_drawpile(card_dtype):
+    @njit()
+    def _new_drawpile(card_dtype=np.int8):
         """create a drawpile len(150) and cards from -2 to 12"""
         drawpile = np.repeat(np.arange(-2, 13, dtype=card_dtype), 10)
         np.random.shuffle(drawpile)
@@ -89,13 +88,10 @@ class SkyjoGame(object):
         self.reset()
 
     @staticmethod
-    @njit
-    def _set_seed_njit(value):
+    @njit()
+    def _set_seed_njit(value: int):
         """set seed for numba"""
-        try:
-            []  # fails in numba
-        except Exception:
-            np.random.seed(value)
+        np.random.seed(value)
 
     @staticmethod
     @njit(fastmath=True)
@@ -292,7 +288,8 @@ class SkyjoGame(object):
         get array of player cards, with refunded and unknown masked with value
 
         return:
-            array of size players_cards (num_players, 4, 3) or players_cards.flatten() if flatten
+            array of size players_cards (num_players, 4, 3)
+                        or players_cards.flatten() if flatten
         """
         cards = np.full_like(players_cards, fill_unknown)
 
@@ -310,9 +307,10 @@ class SkyjoGame(object):
 
     def act(self, player_id: int, action_int: int):
         """perform actions"""
-        assert (
-            self.expected_action[0] == player_id
-        ), f"ILLEGAL ACTION: expected {self.expected_action[0]}, but requested was {player_id}"
+        assert self.expected_action[0] == player_id, (
+            f"ILLEGAL ACTION: expected {self.expected_action[0]}"
+            f" but requested was {player_id}"
+        )
         assert 0 <= action_int <= 25, f"action int {action_int} not in range(0,26)"
 
         if self.is_terminated:
@@ -324,7 +322,8 @@ class SkyjoGame(object):
 
         if 24 <= action_int <= 25:
             assert self.hand_card == self.fill_masked_unk_value, (
-                f"ILLEGAL ACTION. requested draw action {self.render_action_explainer(action_int)}"
+                "ILLEGAL ACTION. requested draw action"
+                f" {self.render_action_explainer(action_int)}"
                 f"already have a hand card {self.hand_card} "
             )
             return self._action_draw_card(player_id, action_int)
@@ -345,7 +344,8 @@ class SkyjoGame(object):
             game over: bool winner_id
             final_scores: list(len(n_players)) if game over
         """
-        # perform goal check, games end if any player has a open 12-card deck before picking up card.
+        # perform goal check
+        # games end if any player has a open 12-card deck before picking up card.
 
         game_done = self._player_goal_check(self.players_masked, player_id)
         if game_done:
@@ -501,7 +501,7 @@ class SkyjoGame(object):
         return self.game_metrics
 
     def get_expected_action(self):
-        return self.expected_action
+        return self.expected_action.copy()
 
     # [start: render utils]
 
@@ -530,7 +530,8 @@ class SkyjoGame(object):
         discard_pile_top = self.discard_pile[-1] if self.discard_pile else "empty"
         str_stats = (
             f"{'='*7} stats {'='*12} \n"
-            f"next turn: {self.expected_action[1]} by Player {self.expected_action[0]} \n"
+            f"next turn: {self.expected_action[1]} "
+            f"by Player {self.expected_action[0]} \n"
             f"holding card player {self.expected_action[0]}: "
             f"{card_hand} \n"
             f"discard pile top: {discard_pile_top} \n"
@@ -602,9 +603,3 @@ class SkyjoGame(object):
 
     # [end: render utils]
 
-
-
-if __name__ == "__main__":
-    game = SkyjoGame(2)._testrun()
-
-# print(timeit.timeit('test_game(game)', globals=globals(), number=1000))
