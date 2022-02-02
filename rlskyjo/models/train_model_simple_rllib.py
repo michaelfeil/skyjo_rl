@@ -1,7 +1,7 @@
 import glob
 import os
 from typing import Tuple
-
+import json
 import ray.tune
 from ray import init
 from ray.rllib.agents import ppo
@@ -14,12 +14,30 @@ from ray.tune.registry import register_env
 from rlskyjo.environment import skyjo_env
 from rlskyjo.game.skyjo import SkyjoGame
 from rlskyjo.models.action_mask_model import TorchActionMaskModel
-from rlskyjo.utils import get_project_root
+from rlskyjo.utils import get_project_root, find_file_in_subdir
 
 torch, nn = try_import_torch()
 
+MAX_CPU = 16
 
-def prepare_train() -> Tuple[ppo.PPOTrainer, PettingZooEnv]:
+def get_resources():
+    """[summary]
+
+    Returns:
+        [(int, int)]: num_cpus, num_gpus
+    """    
+    num_cpus = min(os.cpu_count(), MAX_CPU)
+    num_gpus = int(torch.cuda.device_count())
+    return num_cpus, num_gpus
+
+def prepare_train(
+    prepare_trainer= False,
+    ) -> Tuple[ppo.PPOTrainer, PettingZooEnv, dict]:
+    """[summary]
+
+    Returns:
+        Tuple[ppo.PPOTrainer, PettingZooEnv, dict]: [description]
+    """    
     env_name = "pettingzoo_skyjo"
 
     # get the Pettingzoo env
@@ -31,6 +49,10 @@ def prepare_train() -> Tuple[ppo.PPOTrainer, PettingZooEnv]:
     ModelCatalog.register_custom_model("pa_model2", TorchActionMaskModel)
     # wrap the pettingzoo env in MultiAgent RLLib
     env = PettingZooEnv(env_creator())
+    
+    # resources:
+    num_cpus, num_gpus = get_resources()
+    num_workers = num_cpus - 1
     custom_config = {
         "env": env_name,
         "model": {
@@ -38,8 +60,8 @@ def prepare_train() -> Tuple[ppo.PPOTrainer, PettingZooEnv]:
         },
         "framework": "torch",
         # Use GPUs iff `RLLIB_NUM_GPUS` env var set to > 0.
-        "num_gpus": int(torch.cuda.device_count()),
-        "num_workers": os.cpu_count() - 1,
+        "num_gpus": num_gpus,
+        "num_workers": num_workers,
         "multiagent": {
             "policies": {
                 name: (None, env.observation_space, env.action_space, {})
@@ -54,8 +76,10 @@ def prepare_train() -> Tuple[ppo.PPOTrainer, PettingZooEnv]:
     ppo_config = ppo.DEFAULT_CONFIG.copy()
     ppo_config.update(custom_config)
 
-    trainer = ppo.PPOTrainer(config=ppo_config)
-
+    if prepare_trainer:
+        trainer = ppo.PPOTrainer(config=ppo_config)
+    else:
+        trainer = None
     return trainer, env, ppo_config
 
 
@@ -77,13 +101,31 @@ def train(trainer, max_steps=2e6):
     return trainer
 
 
-def train_ray(ppo_config, timesteps_total: int = 10):
+def train_ray(ppo_config: dict, seconds_max: int = 120, restore: str = None):
+    """[summary]
+
+    Args:
+        ppo_config (dict): config
+        seconds_max (int, optional): timesteps to train. Defaults to 120.
+        restore (str, optional): path_to_trained_agent_checkpoint. Defaults to None.
+
+    Returns:
+        analysis: [description]
+    """    
+    extra_kwargs = {}
+    if restore is not None:
+        extra_kwargs.update({"restore": restore})
+    
+    
+    
     analysis = ray.tune.run(
         ppo.PPOTrainer,
         config=ppo_config,
         local_dir=os.path.join(get_project_root(), "models"),
-        stop={"timesteps_total": timesteps_total},
+        time_budget_s=seconds_max,
         checkpoint_at_end=True,
+        checkpoint_freq=128,
+        **extra_kwargs
     )
     return analysis
 
@@ -107,7 +149,7 @@ def sample_trainer(trainer, env):
     obs = env.reset()
     done = {"__all__": False}
     # run one iteration until done
-
+    env.render()
     for i in range(10000):
         if done["__all__"]:
             print("game done")
@@ -116,9 +158,9 @@ def sample_trainer(trainer, env):
         agent = list(obs.keys())[0]
 
         # format observation dict
-        print(obs)
+        # print(obs)
         obs = obs[agent]
-        env.render()
+        # env.render()
 
         # get deterministic action
         # trainer.compute_single_action(obs, policy_id=agent)
@@ -126,7 +168,8 @@ def sample_trainer(trainer, env):
         action_exploration_policy, _, action_info = policy.compute_single_action(obs)
         logits = action_info["action_dist_inputs"]
         action = logits.argmax()
-        print("agent ", agent, " action ", SkyjoGame.render_action_explainer(action))
+        action = action_exploration_policy
+        # print("agent ", agent, " action ", SkyjoGame.render_action_explainer(action))
         obs, reward, done, _ = env.step({agent: action})
         # observations contain original observations and the action mask
         # print(f"Obs: {obs}, Action: {action}, done: {done}")
@@ -135,22 +178,35 @@ def sample_trainer(trainer, env):
     print(env.env.rewards)
 
 
-def tune_training_loop(timesteps_total=10000):
+def tune_training_loop(seconds_max: int = 120):
     """train trainer and sample"""
     trainer, env, ppo_config = prepare_train()
 
     # train trainer
-    analysis = train_ray(ppo_config, timesteps_total=timesteps_total)
+    analysis = train_ray(ppo_config, 
+                         seconds_max=seconds_max)
     # reload the checkpoint
     last_chpt_path = analysis._checkpoints[-1]["local_dir"]
-    checkpoint_file = glob.glob(
-        os.path.join(last_chpt_path, "**", "checkpoint-*"), recursive=True
-    )[0]
+    checkpoint_file = find_file_in_subdir(last_chpt_path, "checkpoint-*", regex_match=".*\/checkpoint-[0-9]{0,9}$")
+
     trainer_trained = load_ray(checkpoint_file, ppo_config)
 
     # sample trainer
     sample_trainer(trainer_trained, env)
+    return last_chpt_path
 
+def continual_train(restore_path: str, seconds_max: int = 120,):
+    """continoue to train trainer and sample"""
+    _, env, ppo_config = prepare_train()
+    # train trainer
+    analysis = train_ray(ppo_config, 
+                         seconds_max=seconds_max,
+                         restore=find_file_in_subdir(restore_path, "checkpoint-*", regex_match=".*\/checkpoint-[0-9]{0,9}$"))
+    # reload the checkpoint
+    last_chpt_path = analysis._checkpoints[-1]["local_dir"]
+    checkpoint_file = find_file_in_subdir(last_chpt_path, "checkpoint-*", regex_match=".*\/checkpoint-[0-9]{0,9}$")
+    trainer_trained = load_ray(checkpoint_file, ppo_config)
+    sample_trainer(trainer_trained, env)
 
 def manual_training_loop(timesteps_total=10000):
     """train trainer and sample"""
@@ -160,7 +216,15 @@ def manual_training_loop(timesteps_total=10000):
 
     sample_trainer(trainer_trained, env)
 
+def init_ray(local=False):
+    num_cpus, num_gpus = get_resources()
+    
+    if local:
+        init(local_mode=True)
+    else:
+        init(num_cpus=None, num_gpus=num_gpus)
 
 if __name__ == "__main__":
-    init(local_mode=True)
-    tune_training_loop()
+    init_ray()
+    last_chpt_path = tune_training_loop(60*2)
+    continual_train(last_chpt_path, 60)
