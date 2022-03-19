@@ -20,6 +20,13 @@ torch, nn = try_import_torch()
 
 MAX_CPU = 32
 
+skyjo_env.DEFAULT_CONFIG.update(
+    {
+        "num_players": 4,
+        "observe_other_player_indirect": False,
+    }
+)
+
 def get_resources():
     """[summary]
 
@@ -32,7 +39,6 @@ def get_resources():
 
 def prepare_train(
     prepare_trainer= False,
-    env_config = None
     ) -> Tuple[ppo.PPOTrainer, PettingZooEnv, dict]:
     """[summary]
 
@@ -42,17 +48,15 @@ def prepare_train(
     env_name = "pettingzoo_skyjo"
 
     # get the Pettingzoo env
-    def env_creator(env_config=env_config):
-        if env_config is None:
-            env_config = skyjo_env.DEFAULT_CONFIG
+    def env_creator():
         env = skyjo_env.env(**skyjo_env.DEFAULT_CONFIG)
         return env
 
-    register_env(env_name, lambda config: PettingZooEnv(env_creator(env_config)))
+    register_env(env_name, lambda config: PettingZooEnv(env_creator()))
     ModelCatalog.register_custom_model("fc_action_mask_model", TorchActionMaskModel)
-    ModelCatalog.register_custom_model("relation_action_mask_model", TorchActionMaskModel)
+    ModelCatalog.register_custom_model("relation_action_mask_model", TorchPlayerRelation)
     # wrap the pettingzoo env in MultiAgent RLLib
-    env = PettingZooEnv(env_creator(env_config))
+    env = PettingZooEnv(env_creator())
     
     # resources:
     num_cpus, num_gpus = get_resources()
@@ -60,12 +64,15 @@ def prepare_train(
     custom_config = {
         "env": env_name,
         "model": {
-            "custom_model": "relation_action_mask_model",
+            "custom_model": "fc_action_mask_model" \
+                if skyjo_env.DEFAULT_CONFIG["observe_other_player_indirect"] else "relation_action_mask_model",
+                # use model fitting to the action space
         },
         "framework": "torch",
         # Use GPUs iff `RLLIB_NUM_GPUS` env var set to > 0.
         "num_gpus": num_gpus,
         "num_workers": num_workers,
+        # "train_batch_size": 20000,
         "multiagent": {
             "policies": {
                 name: (None, env.observation_space, env.action_space, {})
@@ -87,7 +94,7 @@ def prepare_train(
     return trainer, env, ppo_config
 
 
-def train(trainer, max_steps=2e6):
+def steps_train(trainer, max_steps=2e6):
     # run manual training loop and print results after each iteration
     iters = 0
     while True:
@@ -128,7 +135,7 @@ def train_ray(ppo_config: dict, seconds_max: int = 120, restore: str = None):
         local_dir=os.path.join(get_project_root(), "models"),
         time_budget_s=seconds_max,
         checkpoint_at_end=True,
-        checkpoint_freq=128,
+        checkpoint_freq=128 if seconds_max > 3600 else 1,
         **extra_kwargs
     )
     return analysis
@@ -164,6 +171,8 @@ def sample_trainer(trainer, env):
         # format observation dict
         # print(obs)
         obs = obs[agent]
+        for i in obs:
+            obs[i] = obs[i].astype(float)
         # env.render()
 
         # get deterministic action
@@ -174,7 +183,7 @@ def sample_trainer(trainer, env):
         action = logits.argmax()
         action = action_exploration_policy
         # print("agent ", agent, " action ", SkyjoGame.render_action_explainer(action))
-        obs, reward, done, _ = env.step({agent: action})
+        obs, reward, done, infos = env.step({agent: action})
         # observations contain original observations and the action mask
         # print(f"Obs: {obs}, Action: {action}, done: {done}")
 
@@ -184,8 +193,6 @@ def sample_trainer(trainer, env):
 
 def tune_training_loop(seconds_max: int = 120):
     """train trainer and sample"""
-    custom_conf = skyjo_env.DEFAULT_CONFIG
-    custom_conf.update({"num_players": 6})
     trainer, env, ppo_config = prepare_train()
 
     # train trainer
@@ -217,8 +224,8 @@ def continual_train(restore_path: str, seconds_max: int = 120,):
 def manual_training_loop(timesteps_total=10000):
     """train trainer and sample"""
 
-    trainer, env, ppo_config = prepare_train()
-    trainer_trained = train(trainer, max_steps=timesteps_total)
+    trainer, env, ppo_config = prepare_train(prepare_trainer= True)
+    trainer_trained = steps_train(trainer, max_steps=timesteps_total)
 
     sample_trainer(trainer_trained, env)
 
@@ -231,6 +238,6 @@ def init_ray(local=False):
         init(num_cpus=None, num_gpus=num_gpus)
 
 if __name__ == "__main__":
-    init_ray()
-    last_chpt_path = tune_training_loop(60*5) # train for 5 min
-    continual_train(last_chpt_path, 60)
+    init_ray(True)
+    last_chpt_path = tune_training_loop(60*1) # train for 1 min
+    continual_train(last_chpt_path, 60 // 2) # load model and train for 30 seconds
