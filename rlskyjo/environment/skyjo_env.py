@@ -12,7 +12,7 @@ DEFAULT_CONFIG = {
     "score_penalty": 2.0,
     "observe_other_player_indirect": True,
     "mean_reward": 1.0,
-    "reward_refunded": 0.001,
+    "reward_refunded": 0.0,
 }
 
 
@@ -196,7 +196,7 @@ class SimpleSkyjoEnv(AECEnv):
         """        
         return self._action_spaces[agent]
 
-    def observe(self, agent: str) -> Dict[str,np.ndarray]:
+    def observe(self, agent: str):
         """
         get observation and action mask from environment
         part of the PettingZoo API]
@@ -213,7 +213,7 @@ class SimpleSkyjoEnv(AECEnv):
         )
         return {"observations": obs, "action_mask": action_mask}
 
-    def step(self, action: int) -> None:
+    def step(self, action: int):
         """part of the PettingZoo API
 
         Args:
@@ -225,7 +225,7 @@ class SimpleSkyjoEnv(AECEnv):
                     25: pick hand card from discard pile
             
         Returns:
-            None: 
+            None
         """  
         current_agent = self.agent_selection
         player_id = self._name_to_player_id(current_agent)
@@ -245,16 +245,19 @@ class SimpleSkyjoEnv(AECEnv):
                 self._calc_final_rewards(**(self.table.get_game_metrics()))
             )
             self.dones = {i: True for i in self.agents}
-
+        
         # done
         self._accumulate_rewards()
         self._clear_rewards()
         self._dones_step_first()
 
-    def reset(self) -> None:
+    def reset(self):
         """
         reset the environment
         part of the PettingZoo API
+        
+        Returns:
+            None
         """
         self.table.reset()
         self.agents = self.possible_agents[:]
@@ -266,32 +269,40 @@ class SimpleSkyjoEnv(AECEnv):
         self.dones = self._convert_to_dict([False for _ in range(self.num_agents)])
         self.infos = {i: {} for i in self.agents}
 
-    def render(self, mode="human") -> None:
+    def render(self, mode="human"):
         """render board of the game to stdout
 
-        part of the PettingZoo API"""
+        part of the PettingZoo API
+        Returns:
+            None
+        """
         if mode == "human":
             print(self.table.render_table())
 
-    def close(self) -> None:
-        """part of the PettingZoo API"""
+    def close(self):
+        """part of the PettingZoo API
+        
+        Returns:
+            None
+        """
         pass
 
-    def seed(self, seed: int = None) -> None:
+    def seed(self, seed: int = None):
         """seed the environment.
-        does not affect global np.random.seed()
-        experimental. only works with Numba installed
+        feature: does not affect global np.random.seed(), if with Numba installed
         part of the PettingZoo API
 
         Args:
             seed (int, optional): [description]. Defaults to None.
+        Returns:
+            None
         """       
         if seed is not None:
             self.table.set_seed(seed)
 
     # start utils
     def _calc_final_rewards(
-        self, final_score: List[int], num_refunded: List[int], **kwargs
+        self, final_score: List[float], num_refunded: List[int], num_placed: List[int], **kwargs
     ):
         """
         get reward from score.
@@ -309,6 +320,12 @@ class SimpleSkyjoEnv(AECEnv):
 
         if self.reward_refunded:
             reward += np.array(num_refunded) * self.reward_refunded
+        for i, agent in enumerate(self.agents):
+            self.infos[agent].update({
+                f"refunded": num_refunded[i],
+                f"score": score[i],
+                f"num_placed": num_placed[i],
+            })
         return reward
 
     @staticmethod

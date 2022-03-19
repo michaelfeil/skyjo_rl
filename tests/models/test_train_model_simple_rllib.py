@@ -13,10 +13,10 @@ class RayClassTest(unittest.TestCase):
         ray.init(local_mode=True)
 
     def test_tune_training_loop(self):
-        tune_training_loop(timesteps_total=8000)
+        tune_training_loop(120)
 
     def test_manual_training_loop(self):
-        manual_training_loop(timesteps_total=8000)
+        manual_training_loop(8000)
 
     @classmethod
     def tearDownClass(cls):

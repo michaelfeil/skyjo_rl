@@ -511,9 +511,18 @@ class SkyjoGame(object):
         return score
 
     def get_game_metrics(self):
+        """
+        Returns:
+            dict: entries num_refunded, num_placed, final_score
+        }
+        """
         return self.game_metrics
 
     def get_expected_action(self):
+        """
+        Returns:
+            int: number of full turns played
+        """
         return self.expected_action.copy()
 
     # [start: render utils]
