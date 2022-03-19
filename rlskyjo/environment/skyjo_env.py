@@ -37,38 +37,41 @@ class SimpleSkyjoEnv(AECEnv):
 
     def __init__(
         self,
-        num_players=2,
-        score_penalty: float = 2.0,
-        observe_other_player_indirect: bool = False,
-        mean_reward: float = 1.0,
-        reward_refunded: float = 0.0,
+        env_config: dict = dict(
+            num_players=2,
+            score_penalty=2.0,
+            observe_other_player_indirect= False,
+            mean_reward= 1.0,
+            reward_refunded = 0.0,
+        )
     ):
         """
         Pettingzoo Gym for the card game SkyJo
 
         params:
-            # game configuration
-            num_players: int, number of players
-            score_penalty: float, game default is 2.0
-                score penalty for players ending but not winning the game
+            env_config:
+                # game configuration
+                num_players: int, number of players
+                score_penalty: float, game default is 2.0
+                    score penalty for players ending but not winning the game
 
-            # observation space configuration
-            observe_other_player_indirect: bool
-                True: observation space is:
-                    game statistics (pile +  player cards):
-                    + own 12 player cards
-                False: observation space is:
-                    game statistics (excluding player cards)
-                    + player cards of every player
+                # observation space configuration
+                observe_other_player_indirect: bool
+                    True: observation space is:
+                        game statistics (pile +  player cards):
+                        + own 12 player cards
+                    False: observation space is:
+                        game statistics (excluding player cards)
+                        + player cards of every player
 
-            # rewards
-            mean_reward: float, default: 1.0
-                mean reward at the end of an game
-                recommended to be > 0, e.g. Environments (like RLLib)
-                are positive sum games
-            reward_refunded: float, default: 0.0
-                adds an additional reward to learn the concept
-                of refunding cards in skyjo
+                # rewards
+                mean_reward: float, default: 1.0
+                    mean reward at the end of an game
+                    recommended to be > 0, e.g. Environments (like RLLib)
+                    are positive sum games
+                reward_refunded: float, default: 0.0
+                    adds an additional reward to learn the concept
+                    of refunding cards in skyjo
 
         observation space is DictSpace:
             observations:
@@ -102,18 +105,18 @@ class SimpleSkyjoEnv(AECEnv):
         super().__init__()
 
         # Hyperparams
-        self.num_players = num_players
-        self.mean_reward = mean_reward
-        self.reward_refunded = reward_refunded
+        self.num_players = env_config["num_players"]
+        self.mean_reward = env_config["mean_reward"]
+        self.reward_refunded = env_config["reward_refunded"]
 
         self.table = SkyjoGame(
-            num_players,
-            score_penalty=score_penalty,
-            observe_other_player_indirect=observe_other_player_indirect,
+            self.num_players,
+            score_penalty= env_config["score_penalty"],
+            observe_other_player_indirect=env_config["observe_other_player_indirect"],
         )
 
         # start PettingZoo API stuff
-        self.agents = [f"player_{i}" for i in range(num_players)]
+        self.agents = [f"player_{i}" for i in range(self.num_players)]
         self.possible_agents = self.agents[:]
 
         self.agent_selection = self._expected_agentname_and_action()[0]

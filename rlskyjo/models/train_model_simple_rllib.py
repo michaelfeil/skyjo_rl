@@ -20,7 +20,8 @@ torch, nn = try_import_torch()
 
 MAX_CPU = 32
 
-skyjo_env.DEFAULT_CONFIG.update(
+ENV_CONFIG = skyjo_env.DEFAULT_CONFIG.copy()
+ENV_CONFIG.update(
     {
         "num_players": 4,
         "observe_other_player_indirect": False,
@@ -39,6 +40,7 @@ def get_resources():
 
 def prepare_train(
     prepare_trainer= False,
+    config=None
     ) -> Tuple[ppo.PPOTrainer, PettingZooEnv, dict]:
     """[summary]
 
@@ -46,33 +48,35 @@ def prepare_train(
         Tuple[ppo.PPOTrainer, PettingZooEnv, dict]: [description]
     """    
     env_name = "pettingzoo_skyjo"
-
+    if config is None:
+        env_config = ENV_CONFIG
     # get the Pettingzoo env
-    def env_creator():
-        env = skyjo_env.env(**skyjo_env.DEFAULT_CONFIG)
+    def env_creator(env_config):
+        env = skyjo_env.env(env_config)
         return env
 
-    register_env(env_name, lambda config: PettingZooEnv(env_creator()))
+    register_env(env_name, lambda env_config: PettingZooEnv(env_creator(env_config)))
     ModelCatalog.register_custom_model("fc_action_mask_model", TorchActionMaskModel)
     ModelCatalog.register_custom_model("relation_action_mask_model", TorchPlayerRelation)
     # wrap the pettingzoo env in MultiAgent RLLib
-    env = PettingZooEnv(env_creator())
+    env = PettingZooEnv(env_creator(config))
     
     # resources:
     num_cpus, num_gpus = get_resources()
     num_workers = num_cpus - 1
     custom_config = {
         "env": env_name,
+        "env_config": env_config,
         "model": {
             "custom_model": "fc_action_mask_model" \
-                if skyjo_env.DEFAULT_CONFIG["observe_other_player_indirect"] else "relation_action_mask_model",
+                if config["observe_other_player_indirect"] else "relation_action_mask_model",
                 # use model fitting to the action space
         },
         "framework": "torch",
         # Use GPUs iff `RLLIB_NUM_GPUS` env var set to > 0.
         "num_gpus": num_gpus,
         "num_workers": num_workers,
-        # "train_batch_size": 20000,
+        "train_batch_size": 4000,
         "multiagent": {
             "policies": {
                 name: (None, env.observation_space, env.action_space, {})
@@ -224,7 +228,7 @@ def continual_train(restore_path: str, seconds_max: int = 120,):
 def manual_training_loop(timesteps_total=10000):
     """train trainer and sample"""
 
-    trainer, env, ppo_config = prepare_train(prepare_trainer= True)
+    trainer, env, ppo_config = prepare_train(prepare_trainer=True, config=skyjo_env.DEFAULT_CONFIG.copy())
     trainer_trained = steps_train(trainer, max_steps=timesteps_total)
 
     sample_trainer(trainer_trained, env)
@@ -238,6 +242,6 @@ def init_ray(local=False):
         init(num_cpus=None, num_gpus=num_gpus)
 
 if __name__ == "__main__":
-    init_ray(True)
-    last_chpt_path = tune_training_loop(60*1) # train for 1 min
-    continual_train(last_chpt_path, 60 // 2) # load model and train for 30 seconds
+    init_ray()
+    last_chpt_path = tune_training_loop(60*60*23) # train for 1 min
+    # continual_train(last_chpt_path, 60 // 2) # load model and train for 30 seconds

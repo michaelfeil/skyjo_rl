@@ -7,7 +7,7 @@ def simple_episode(config, verbose=0):
     """create a vanilla example"""
     if verbose:
         print(f"running with config: {config}")
-    env_pettingzoo = skyjo_env.env(**config)
+    env_pettingzoo = skyjo_env.env(config)
 
     env_pettingzoo.reset()
 
