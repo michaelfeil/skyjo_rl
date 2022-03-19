@@ -242,6 +242,6 @@ def init_ray(local=False):
         init(num_cpus=None, num_gpus=num_gpus)
 
 if __name__ == "__main__":
-    init_ray(True)
+    init_ray()
     last_chpt_path = tune_training_loop(60*60*23) # train for 1 min
     # continual_train(last_chpt_path, 60 // 2) # load model and train for 30 seconds
