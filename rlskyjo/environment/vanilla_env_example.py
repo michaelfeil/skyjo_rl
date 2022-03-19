@@ -7,8 +7,7 @@ def simple_episode(config, verbose=0):
     """create a vanilla example"""
     if verbose:
         print(f"running with config: {config}")
-    env_pettingzoo = skyjo_env.env(config)
-
+    env_pettingzoo = skyjo_env.env(env_config=config)
     env_pettingzoo.reset()
 
     for agent in env_pettingzoo.agent_iter(max_iter=300 * config["num_players"]):

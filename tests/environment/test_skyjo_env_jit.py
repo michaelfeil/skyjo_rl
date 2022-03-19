@@ -15,7 +15,7 @@ def test_reproducability(seed=42):
     observations = {i: [] for i in range(n_runs)}
     config_env = DEFAULT_CONFIG
     for i in range(2):
-        env_pettingzoo = skyjo_env.env(config_env)
+        env_pettingzoo = skyjo_env.env(env_config=config_env)
         env_pettingzoo.seed(42)
         rng = np.random.default_rng(seed)
         env_pettingzoo.reset()

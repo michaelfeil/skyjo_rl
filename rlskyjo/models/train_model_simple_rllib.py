@@ -52,7 +52,7 @@ def prepare_train(
         env_config = ENV_CONFIG
     # get the Pettingzoo env
     def env_creator(env_config):
-        env = skyjo_env.env(env_config)
+        env = skyjo_env.env(env_config=env_config)
         return env
 
     register_env(env_name, lambda env_config: PettingZooEnv(env_creator(env_config)))
@@ -242,6 +242,6 @@ def init_ray(local=False):
         init(num_cpus=None, num_gpus=num_gpus)
 
 if __name__ == "__main__":
-    init_ray()
-    last_chpt_path = tune_training_loop(60*60*23) # train for 1 min
+    init_ray(True)
+    last_chpt_path = tune_training_loop(60*2) # train for 1 min
     # continual_train(last_chpt_path, 60 // 2) # load model and train for 30 seconds
