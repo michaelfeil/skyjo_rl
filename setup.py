@@ -9,10 +9,10 @@ import sys
 def _get_version():
     with open('rlskyjo/__init__.py') as fp:
         for line in fp:
-        if line.startswith('__version__') and '=' in line:
-            version = line[line.find('=')+1:].strip(' \'"\n')
-            if version:
-            return version
+            if line.startswith('__version__') and '=' in line:
+                version = line[line.find('=')+1:].strip(' \'"\n')
+                if version:
+                    return version
         raise ValueError('`__version__` not defined in `rlskyjo/__init__.py`')
 
 setup(
