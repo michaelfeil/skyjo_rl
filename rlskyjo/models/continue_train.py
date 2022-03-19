@@ -4,4 +4,4 @@ import os
 if __name__ == "__main__":
     last_chpt_path = os.path.expanduser("~/")
     init_ray()
-    continual_train(last_chpt_path, 60*60*4)
+    continual_train(last_chpt_path, int(60*60*9.5))

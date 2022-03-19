@@ -13,12 +13,12 @@ from ray.tune.registry import register_env
 
 from rlskyjo.environment import skyjo_env
 from rlskyjo.game.skyjo import SkyjoGame
-from rlskyjo.models.action_mask_model import TorchActionMaskModel
+from rlskyjo.models.action_mask_model import TorchActionMaskModel, TorchPlayerRelation
 from rlskyjo.utils import get_project_root, find_file_in_subdir
 
 torch, nn = try_import_torch()
 
-MAX_CPU = 16
+MAX_CPU = 32
 
 def get_resources():
     """[summary]
@@ -32,6 +32,7 @@ def get_resources():
 
 def prepare_train(
     prepare_trainer= False,
+    env_config = None
     ) -> Tuple[ppo.PPOTrainer, PettingZooEnv, dict]:
     """[summary]
 
@@ -41,14 +42,17 @@ def prepare_train(
     env_name = "pettingzoo_skyjo"
 
     # get the Pettingzoo env
-    def env_creator():
+    def env_creator(env_config=env_config):
+        if env_config is None:
+            env_config = skyjo_env.DEFAULT_CONFIG
         env = skyjo_env.env(**skyjo_env.DEFAULT_CONFIG)
         return env
 
-    register_env(env_name, lambda config: PettingZooEnv(env_creator()))
-    ModelCatalog.register_custom_model("pa_model2", TorchActionMaskModel)
+    register_env(env_name, lambda config: PettingZooEnv(env_creator(env_config)))
+    ModelCatalog.register_custom_model("fc_action_mask_model", TorchActionMaskModel)
+    ModelCatalog.register_custom_model("relation_action_mask_model", TorchActionMaskModel)
     # wrap the pettingzoo env in MultiAgent RLLib
-    env = PettingZooEnv(env_creator())
+    env = PettingZooEnv(env_creator(env_config))
     
     # resources:
     num_cpus, num_gpus = get_resources()
@@ -56,7 +60,7 @@ def prepare_train(
     custom_config = {
         "env": env_name,
         "model": {
-            "custom_model": "pa_model2",
+            "custom_model": "relation_action_mask_model",
         },
         "framework": "torch",
         # Use GPUs iff `RLLIB_NUM_GPUS` env var set to > 0.
@@ -180,6 +184,8 @@ def sample_trainer(trainer, env):
 
 def tune_training_loop(seconds_max: int = 120):
     """train trainer and sample"""
+    custom_conf = skyjo_env.DEFAULT_CONFIG
+    custom_conf.update({"num_players": 6})
     trainer, env, ppo_config = prepare_train()
 
     # train trainer
@@ -226,5 +232,5 @@ def init_ray(local=False):
 
 if __name__ == "__main__":
     init_ray()
-    last_chpt_path = tune_training_loop(60*2)
+    last_chpt_path = tune_training_loop(60*5) # train for 5 min
     continual_train(last_chpt_path, 60)

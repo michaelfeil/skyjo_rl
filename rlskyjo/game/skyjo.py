@@ -231,7 +231,17 @@ class SkyjoGame(object):
         pile: np.ndarray,
         count_players_cards: bool = True,
     ) -> Tuple[np.ndarray, np.ndarray, np.ndarray, int]:
-        """observe game statistics, features to percieve global game"""
+        """
+        observe game statistics, features to percieve global game
+        relaxes the fact that agents do not need to perceive the past, 
+        i.e. use an LSTM for counting cards on pile
+
+        returns:
+            counts: counts of all cards (-2 to 15, shape 15)
+            known_cards_sum: sum for each player
+            count_hidden: number of hidden cards per player
+            pile_top: shape 1
+        """
         # bincount
         counted = np.array(list(pile) + list(range(-2, 13)), dtype=players_cards.dtype)
         known_cards_sum = [0] * players_cards.shape[0]
@@ -294,7 +304,10 @@ class SkyjoGame(object):
         cards = np.full_like(players_cards, fill_unknown)
 
         # assign in the desired order
-        for player_id_iter in np.roll(np.arange(players_cards.shape[0]), player_id):
+        # e.g. player_id=2 and 4 players == players_cards.shape[0]
+        # observe next players in order starting from own 
+        # i.e. cards of player 2, then 3, then 0, then 1
+        for player_id_iter in np.roll(np.arange(players_cards.shape[0]), -player_id):
             masked_revealed = players_masked[player_id_iter] != 2
             cards[player_id_iter][masked_revealed] = players_cards[player_id_iter][
                 masked_revealed
