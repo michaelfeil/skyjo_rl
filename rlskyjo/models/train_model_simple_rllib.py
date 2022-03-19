@@ -24,7 +24,7 @@ ENV_CONFIG = skyjo_env.DEFAULT_CONFIG.copy()
 ENV_CONFIG.update(
     {
         "num_players": 4,
-        "observe_other_player_indirect": False,
+        "observe_other_player_indirect": True,
     }
 )
 
@@ -76,7 +76,7 @@ def prepare_train(
         # Use GPUs iff `RLLIB_NUM_GPUS` env var set to > 0.
         "num_gpus": num_gpus,
         "num_workers": num_workers,
-        # "train_batch_size": 4000,
+        "train_batch_size": 4000,
         "multiagent": {
             "policies": {
                 name: (None, env.observation_space, env.action_space, {})
