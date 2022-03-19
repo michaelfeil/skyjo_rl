@@ -40,7 +40,7 @@ def get_resources():
 
 def prepare_train(
     prepare_trainer= False,
-    config=None
+    env_config=None
     ) -> Tuple[ppo.PPOTrainer, PettingZooEnv, dict]:
     """[summary]
 
@@ -48,7 +48,7 @@ def prepare_train(
         Tuple[ppo.PPOTrainer, PettingZooEnv, dict]: [description]
     """    
     env_name = "pettingzoo_skyjo"
-    if config is None:
+    if env_config is None:
         env_config = ENV_CONFIG
     # get the Pettingzoo env
     def env_creator(env_config):
@@ -59,7 +59,7 @@ def prepare_train(
     ModelCatalog.register_custom_model("fc_action_mask_model", TorchActionMaskModel)
     ModelCatalog.register_custom_model("relation_action_mask_model", TorchPlayerRelation)
     # wrap the pettingzoo env in MultiAgent RLLib
-    env = PettingZooEnv(env_creator(config))
+    env = PettingZooEnv(env_creator(env_config))
     
     # resources:
     num_cpus, num_gpus = get_resources()
@@ -69,14 +69,14 @@ def prepare_train(
         "env_config": env_config,
         "model": {
             "custom_model": "fc_action_mask_model" \
-                if config["observe_other_player_indirect"] else "relation_action_mask_model",
+                if env_config["observe_other_player_indirect"] else "relation_action_mask_model",
                 # use model fitting to the action space
         },
         "framework": "torch",
         # Use GPUs iff `RLLIB_NUM_GPUS` env var set to > 0.
         "num_gpus": num_gpus,
         "num_workers": num_workers,
-        "train_batch_size": 4000,
+        # "train_batch_size": 4000,
         "multiagent": {
             "policies": {
                 name: (None, env.observation_space, env.action_space, {})
@@ -243,5 +243,5 @@ def init_ray(local=False):
 
 if __name__ == "__main__":
     init_ray(True)
-    last_chpt_path = tune_training_loop(60*2) # train for 1 min
+    last_chpt_path = tune_training_loop(60*60*23) # train for 1 min
     # continual_train(last_chpt_path, 60 // 2) # load model and train for 30 seconds
