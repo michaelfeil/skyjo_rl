@@ -228,7 +228,7 @@ def continual_train(restore_path: str, seconds_max: int = 120,):
 def manual_training_loop(timesteps_total=10000):
     """train trainer and sample"""
 
-    trainer, env, ppo_config = prepare_train(prepare_trainer=True, config=skyjo_env.DEFAULT_CONFIG.copy())
+    trainer, env, ppo_config = prepare_train(prepare_trainer=True, env_config=skyjo_env.DEFAULT_CONFIG.copy())
     trainer_trained = steps_train(trainer, max_steps=timesteps_total)
 
     sample_trainer(trainer_trained, env)
