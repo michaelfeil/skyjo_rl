@@ -1,6 +1,6 @@
 gym==0.21.0
 numba==0.55.0
-numpy==1.21.5
+numpy==1.22.0
 PettingZoo==1.14.0
 ray==1.9.2
 ray[tune]==1.9.2
